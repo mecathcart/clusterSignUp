@@ -7,7 +7,7 @@
   <p>Cluster Sign Up</p>
   
   <select id="selectCluster">
-<option value="" disabled selected>Please select a name...</option> 
+<option value="" disabled selected>Please select a cluster...</option> 
 
 </select>
 <br>
@@ -30,35 +30,31 @@
   
 
  function onSuccess(clusterList) {
+ 
+ 
    console.log(clusterList);
-   var selectCluster = document.getElementById("selectCluster");
-   for (var i = 0; i < clusterList.length; ++i) {
-   
-      var opt = clusterList[i];
-      var el = document.createElement("selectCluster");
-      el.textContent = opt;
-      el.value = opt;
-      selectCluster.appendChild(el);
+   var dropdown = document.getElementById("selectCluster");
 
-        }
+
+// Loop through the array
+for (var i = 0; i < clusterList.length; ++i) {
+    // Append the element to the end of Array list
+    dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
+}
+   
+   
+   
+   
+   
+
       }
 
  google.script.run.withSuccessHandler(onSuccess).getClusterList();
 
 
 
-
-
-
-//var options = ["1", "2", "3", "4", "5"]; 
-
-
-
   
-  
-  
-  
-  
+    
   
   
   
