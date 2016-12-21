@@ -10,16 +10,20 @@ function doGet() {
 
 var ss = SpreadsheetApp.openById('1TqcXN0mufW1KlRP8NeJuQVOE-ZPZHxAfhPM5WxwuZgY');
 var clusterSheet = ss.getSheets()[1];
+var studentSheet = ss.getSheets()[0];
   
 var clusterList = [];
+var studentList = [];
+
 
 var clusterSheetRange = clusterSheet.getRange(1, 1, clusterSheet.getMaxRows(), clusterSheet.getMaxColumns());
 var clusterObjects = getRowsData(clusterSheet, clusterSheetRange);
 
+var studentSheetRange = studentSheet.getRange(1, 1, studentSheet.getMaxRows(), studentSheet.getMaxColumns());
+var studentObjects = getRowsData(studentSheet, studentSheetRange);
 
 
 //var clusterList = clusterName.clusterObjects;
-
 function getClusterList(){
 
  for (var i = 1; i < clusterObjects.length; ++i) {
@@ -32,6 +36,40 @@ function getClusterList(){
  Logger.log(clusterList);
 return clusterList;
 }
+
+
+
+
+
+
+function autoComplete(){
+ 
+ for (var i = 1; i < studentObjects.length; ++i) {
+    var rowData = studentObjects[i];
+
+    studentList[i] = rowData.studentName;
+    
+    }
+
+
+
+Logger.log(studentList);
+return studentList;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

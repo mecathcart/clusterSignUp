@@ -6,8 +6,9 @@
 <body>
   <p>Cluster Sign Up</p>
   
-  <select id="selectCluster">
-<option value="" disabled selected>Please select a cluster...</option> 
+  <select id="selectCluster" >
+
+<option value="" disabled selected>Please select a cluster</option> 
 
 </select>
 <br>
@@ -17,7 +18,9 @@
   <br>
   <br>
   <form onsubmit="formSubmit(event)" >
-    Family Name, First Name: <input type="text" value=" " name ="studentName"/>
+    Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
+    <datalist id="studentName-datalist"></datalist>
+
     <input type="submit" onClick="formSubmit(event)" value = "Submit"/> <p>
   </form>
   
@@ -29,38 +32,58 @@
   
   
 
- function onSuccess(clusterList) {
+ function onSuccess(clusterList, studentList) {
  
- 
-   console.log(clusterList);
+   console.log(studentList);
    var dropdown = document.getElementById("selectCluster");
-
-
-// Loop through the array
-for (var i = 0; i < clusterList.length; ++i) {
-    // Append the element to the end of Array list
-    dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
-}
+      
+   
+    // Loop through the array
+ for (var i = 0; i < clusterList.length; ++i) {
+ //Append the element to the end of Array list
+  dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
+ }  
    
    
-   
-   
-   
-
-      }
-
- google.script.run.withSuccessHandler(onSuccess).getClusterList();
-
-
-
+    var dataList = document.getElementById('studentName-datalist');
+  var input = document.getElementById('studentName');    
   
+  // Loop through the array
+    for (var i = 0; i < studentList.length; ++i) {
+     // Append the element to the end of Array list
+     // dataList[dataList.length] = new Option(studentList[i], studentList[i]);
+          
+      var option = document.createElement('option');
+        // Set the value using the item in the JSON array.
+        option.value = studentList[i];
+        // Add the <option> element to the <datalist>.
+        dataList.appendChild(option);
+    }  
+      console.log(dataList);
     
-  
-  
-  
-  
-  
- 
+      }
+      
+      
+      
+      
+ google.script.run.withSuccessHandler(onSuccess).getClusterList().autoComplete();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   </script>
 
 </body>
