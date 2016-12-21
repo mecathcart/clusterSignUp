@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+</head>
+<body>
+  <p>Cluster Sign Up</p>
+  
+  <select id="selectCluster">
+<option value="" disabled selected>Please select a name...</option> 
+
+</select>
+<br>
+  <br>
+  
+  Please write your name as it appears on your yellow sheet. 
+  <br>
+  <br>
+  <form onsubmit="formSubmit(event)" >
+    Family Name, First Name: <input type="text" value=" " name ="studentName"/>
+    <input type="submit" onClick="formSubmit(event)" value = "Submit"/> <p>
+  </form>
+  
+  <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
+
+  <div id="output"></div>
+
+  <script  type="text/javascript">
+  
+  
+var selectCluster = document.getElementById("selectCluster");
+
+//var options = ["1", "2", "3", "4", "5"]; 
+console.log(clusterList);
+for (var i = 0; i < clusterList.length; ++i) {
+   
+    var opt = clusterList[i];
+    var el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    selectCluster.appendChild(el);
+
+}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    //function runs on the click on the button and calls the tutor schedule function with the variable of the form.
+    function formSubmit(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      
+      var spinner = document.getElementById("spinner");
+      spinner.removeAttribute("hidden");
+      
+      function clearDiv(){
+        if(document.getElementsByClassName("schedule")){
+          var elements = document.getElementsByClassName("schedule");
+          while(elements.length > 0){
+            elements[0].parentNode.removeChild(elements[0]);
+          }
+        };
+      };
+
+      clearDiv();
+
+      google.script.run.withSuccessHandler(onSuccess).tutorSchedule(document.forms[0]);
+    }
+
+    //function runs when tutorSchedule completes and prints out the student schedule.
+    function onSuccess(schedule) {
+      var div = document.createElement('div');
+      div.className = "schedule";
+
+      document.body.appendChild(div);  
+      //   schedule = schedule.toString();
+      console.log("Hello");
+      div.innerHTML =  schedule;
+      
+      var spinner = document.getElementById("spinner");
+      spinner.setAttribute("hidden", "hidden");
+    }
+  </script>
+
+</body>
+</html>
+
+
+
