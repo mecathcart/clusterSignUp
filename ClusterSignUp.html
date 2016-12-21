@@ -28,77 +28,43 @@
   <script  type="text/javascript">
   
   
-var selectCluster = document.getElementById("selectCluster");
+
+ function onSuccess(clusterList) {
+   console.log(clusterList);
+   var selectCluster = document.getElementById("selectCluster");
+   for (var i = 0; i < clusterList.length; ++i) {
+   
+      var opt = clusterList[i];
+      var el = document.createElement("selectCluster");
+      el.textContent = opt;
+      el.value = opt;
+      selectCluster.appendChild(el);
+
+        }
+      }
+
+ google.script.run.withSuccessHandler(onSuccess).getClusterList();
+
+
+
+
+
 
 //var options = ["1", "2", "3", "4", "5"]; 
-console.log(clusterList);
-for (var i = 0; i < clusterList.length; ++i) {
-   
-    var opt = clusterList[i];
-    var el = document.createElement("option");
-    el.textContent = opt;
-    el.value = opt;
-    selectCluster.appendChild(el);
 
-}
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    //function runs on the click on the button and calls the tutor schedule function with the variable of the form.
-    function formSubmit(event) {
-      if (event) {
-        event.preventDefault();
-      }
-      
-      var spinner = document.getElementById("spinner");
-      spinner.removeAttribute("hidden");
-      
-      function clearDiv(){
-        if(document.getElementsByClassName("schedule")){
-          var elements = document.getElementsByClassName("schedule");
-          while(elements.length > 0){
-            elements[0].parentNode.removeChild(elements[0]);
-          }
-        };
-      };
 
-      clearDiv();
 
-      google.script.run.withSuccessHandler(onSuccess).tutorSchedule(document.forms[0]);
-    }
-
-    //function runs when tutorSchedule completes and prints out the student schedule.
-    function onSuccess(schedule) {
-      var div = document.createElement('div');
-      div.className = "schedule";
-
-      document.body.appendChild(div);  
-      //   schedule = schedule.toString();
-      console.log("Hello");
-      div.innerHTML =  schedule;
-      
-      var spinner = document.getElementById("spinner");
-      spinner.setAttribute("hidden", "hidden");
-    }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
   </script>
 
 </body>
