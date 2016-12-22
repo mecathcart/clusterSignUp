@@ -32,23 +32,24 @@
   
   
 
- function onSuccess(clusterList, studentList) {
+ function onSuccess1(clusterList) {
  
-   console.log(studentList);
    var dropdown = document.getElementById("selectCluster");
-      
-   
     // Loop through the array
- for (var i = 0; i < clusterList.length; ++i) {
- //Append the element to the end of Array list
-  dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
- }  
+   for (var i = 0; i < clusterList.length; ++i) {
+     //Append the element to the end of Array list
+      dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
+   }  
    
-   
-    var dataList = document.getElementById('studentName-datalist');
+}   
+ 
+ 
+ function onSuccess2(studentList){
+ 
+  var dataList = document.getElementById('studentName-datalist');
   var input = document.getElementById('studentName');    
-  
-  // Loop through the array
+  console.log(studentList);
+    // Loop through the array
     for (var i = 0; i < studentList.length; ++i) {
      // Append the element to the end of Array list
      // dataList[dataList.length] = new Option(studentList[i], studentList[i]);
@@ -59,15 +60,26 @@
         // Add the <option> element to the <datalist>.
         dataList.appendChild(option);
     }  
-      console.log(dataList);
     
-      }
+ 
+ 
+ 
+ 
+ }
+ 
+ 
+ 
+ 
+   
+ 
+ 
       
       
       
       
- google.script.run.withSuccessHandler(onSuccess).getClusterList().autoComplete();
+ google.script.run.withSuccessHandler(onSuccess1).getClusterList();
 
+ google.script.run.withSuccessHandler(onSuccess2).autoComplete();
 
 
 
