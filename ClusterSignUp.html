@@ -4,16 +4,18 @@
   <base target="_top">
 </head>
 <body>
+
+<div id = "clusterSignUp">
   <p>Cluster Sign Up</p>
-  
   <select id="selectCluster" >
+    <option value="" disabled selected>Please select a cluster</option> 
+  </select>
+</div>
 
-<option value="" disabled selected>Please select a cluster</option> 
-
-</select>
 <br>
-  <br>
-  
+<br>
+
+<div id = "studentName">
   Please write your name as it appears on your yellow sheet. 
   <br>
   <br>
@@ -23,6 +25,26 @@
 
     <input type="submit" onClick="formSubmit(event)" value = "Submit"/> <p>
   </form>
+</div>
+  
+<div id="studentEmail">
+
+
+</div>
+  <div id="radio" hidden= "hidden">
+    <form action="">
+      <input type="radio" name="email" value="yes"> yes<br>
+      <input type="radio" name="email" value="no"> no<br>
+     </form>
+  </div>  
+  
+  
+  
+  
+  
+  
+  
+  
   
   <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
 
@@ -57,39 +79,16 @@
    }
  
  function onSuccess3(studentEmail){
-   var div = document.createElement('div');
-   div.className = "studentEmail";
 
-   document.body.appendChild(div);  
+   var div = document.getElementById("studentEmail");
    div.innerHTML =  "Is this your email? " +studentEmail;
       
    var spinner = document.getElementById("spinner");
    spinner.setAttribute("hidden", "hidden");
  
-  //var radio_home = document.getElementById("radio_home");
+   var radio = document.getElementById("radio");
+   radio.removeAttribute("hidden");
 
-  function makeRadioButton(name, value, text) {
-    var label = document.createElement("label");
-    var radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = name;
-    radio.value = value;
-    label.appendChild(radio);
-    label.appendChild(document.createTextNode(text));
-    return label;
-  }
-  
-  var div2 = document.createElement('div');
-  div2.setAttribute("id", "radio_home");
-   document.body.appendChild(div2);  
-
-  var yes_button = makeRadioButton("yesbutton", "yes", " yes");
-  div2.appendChild(yes_button);
-  
-  var no_button = makeRadioButton("nobutton", "no", " no");
-  div2.appendChild(no_button);
-
- 
  }
  
       
@@ -104,7 +103,6 @@
       
       var spinner = document.getElementById("spinner");
       spinner.removeAttribute("hidden");
-    //  console.log(document.forms[0]);
       google.script.run.withSuccessHandler(onSuccess3).getStudentEmail(document.forms[0]);
     }
 
