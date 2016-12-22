@@ -1,98 +1,129 @@
-< !DOCTYPE html >
-  < html >
-  < head >
-  < base target = "_top" >
-  < /head> < body >
-  < p > Cluster Sign Up < /p>
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+</head>
+<body>
+  <p>Cluster Sign Up</p>
+  
+  <select id="selectCluster" >
 
-< select id = "selectCluster" >
+<option value="" disabled selected>Please select a cluster</option> 
 
-  < option value = ""
-disabled selected > Please select a cluster < /option> 
+</select>
+<br>
+  <br>
+  
+  Please write your name as it appears on your yellow sheet. 
+  <br>
+  <br>
+  <form onsubmit="formSubmit(event)" >
+    Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
+    <datalist id="studentName-datalist"></datalist>
 
-< /select> < br >
-  < br >
-
-  Please write your name as it appears on your yellow sheet. < br >
-  < br >
-  < form onsubmit = "formSubmit(event)" >
-  Family Name, First Name: < input type = "text"
-value = " "
-name = "studentName"
-list = "studentName-datalist"
-id = "studentName" / >
-  < datalist id = "studentName-datalist" > < /datalist>
-
-< input type = "submit"
-onClick = "formSubmit(event)"
-value = "Submit" / > < p >
-  < /form>
-
-< img src = "http://app.lingsync.org/images/loading-spinner.gif"
-width = "20"
-hidden = hidden id = "spinner" / >
+    <input type="submit" onClick="formSubmit(event)" value = "Submit"/> <p>
+  </form>
+  
+  <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
 
 
 
-  < script type = "text/javascript" >
+  <script  type="text/javascript">
+  
+  
 
-
-
-  function onSuccess1(clusterList) {
-    var dropdown = document.getElementById("selectCluster");
+ function onSuccess1(clusterList) { 
+   var dropdown = document.getElementById("selectCluster");
     // Loop through the array
-    for (var i = 0; i < clusterList.length; ++i) {
-      //Append the element to the end of Array list
+   for (var i = 0; i < clusterList.length; ++i) {
+     //Append the element to the end of Array list
       dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
-    }
-  }
-
-
-function onSuccess2(studentList) {
+   }     
+  }   
+ 
+ 
+ function onSuccess2(studentList){ 
   var dataList = document.getElementById('studentName-datalist');
-  var input = document.getElementById('studentName');
-  // Loop through the array
-  for (var i = 0; i < studentList.length; ++i) {
-    // Append the element to the end of Array list
-    var option = document.createElement('option');
-    // Set the value using the item in the JSON array.
-    option.value = studentList[i];
-    // Add the <option> element to the <datalist>.
-    dataList.appendChild(option);
+  var input = document.getElementById('studentName');    
+    // Loop through the array
+    for (var i = 0; i < studentList.length; ++i) {
+     // Append the element to the end of Array list
+      var option = document.createElement('option');
+      // Set the value using the item in the JSON array.
+      option.value = studentList[i];
+      // Add the <option> element to the <datalist>.
+      dataList.appendChild(option);
+    }  
+   }
+ 
+ function onSuccess3(studentEmail){
+   var div = document.createElement('div');
+   div.className = "studentEmail";
+
+   document.body.appendChild(div);  
+   div.innerHTML =  "Is this your email? " +studentEmail;
+      
+   var spinner = document.getElementById("spinner");
+   spinner.setAttribute("hidden", "hidden");
+ 
+  //var radio_home = document.getElementById("radio_home");
+
+  function makeRadioButton(name, value, text) {
+    var label = document.createElement("label");
+    var radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = name;
+    radio.value = value;
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(text));
+    return label;
   }
-}
+  
+  var div2 = document.createElement('div');
+  div2.setAttribute("id", "radio_home");
+   document.body.appendChild(div2);  
 
-function onSuccess3(studentEmail) {
-  var div = document.createElement('div');
-  div.className = "studentEmail";
+  var yes_button = makeRadioButton("yesbutton", "yes", " yes");
+  div2.appendChild(yes_button);
+  
+  var no_button = makeRadioButton("nobutton", "no", " no");
+  div2.appendChild(no_button);
 
-  document.body.appendChild(div);
-  div.innerHTML = "Is this your email? " + studentEmail;
-
-  var spinner = document.getElementById("spinner");
-  spinner.setAttribute("hidden", "hidden");
-
-
-}
-
-
-google.script.run.withSuccessHandler(onSuccess1).getClusterList();
-google.script.run.withSuccessHandler(onSuccess2).autoComplete();
-
-
-function formSubmit(event) {
-  if (event) {
-    event.preventDefault();
-  }
-
-  var spinner = document.getElementById("spinner");
-  spinner.removeAttribute("hidden");
-  //  console.log(document.forms[0]);
-  google.script.run.withSuccessHandler(onSuccess3).getStudentEmail(document.forms[0]);
-}
+ 
+ }
+ 
+      
+ google.script.run.withSuccessHandler(onSuccess1).getClusterList();
+ google.script.run.withSuccessHandler(onSuccess2).autoComplete();
 
 
+ function formSubmit(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      
+      var spinner = document.getElementById("spinner");
+      spinner.removeAttribute("hidden");
+    //  console.log(document.forms[0]);
+      google.script.run.withSuccessHandler(onSuccess3).getStudentEmail(document.forms[0]);
+    }
 
-< /script>
 
-< /body> < /html>
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+
+</body>
+</html>
+
+
+
