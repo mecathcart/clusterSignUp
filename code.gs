@@ -6,15 +6,13 @@ function doGet() {
 }
 
 
-//identifies spreadsheet and first sheet
-
+//identifies spreadsheet
 var ss = SpreadsheetApp.openById('1TqcXN0mufW1KlRP8NeJuQVOE-ZPZHxAfhPM5WxwuZgY');
 var clusterSheet = ss.getSheets()[1];
 var studentSheet = ss.getSheets()[0];
-  
+
 var clusterList = [];
 var studentList = [];
-
 
 var clusterSheetRange = clusterSheet.getRange(1, 1, clusterSheet.getMaxRows(), clusterSheet.getMaxColumns());
 var clusterObjects = getRowsData(clusterSheet, clusterSheetRange);
@@ -23,61 +21,48 @@ var studentSheetRange = studentSheet.getRange(1, 1, studentSheet.getMaxRows(), s
 var studentObjects = getRowsData(studentSheet, studentSheetRange);
 
 
-//var clusterList = clusterName.clusterObjects;
-function getClusterList(){
-
- for (var i = 1; i < clusterObjects.length; ++i) {
+//retrieves the list of clusters
+function getClusterList() {
+  for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
-
     clusterList[i] = rowData.clusterName;
-    
-    }
- clusterList.shift();
- Logger.log(clusterList);
-return clusterList;
+  }
+  clusterList.shift();
+  // Logger.log(clusterList);
+  return clusterList;
+}
+
+//retrieves the list of students
+function autoComplete() {
+  for (var i = 1; i < studentObjects.length; ++i) {
+    var rowData = studentObjects[i];
+    studentList[i] = rowData.studentName;
+  }
+  //Logger.log(studentList);
+  return studentList;
 }
 
 
+//retrieves student's email
+function getStudentEmail(form) {
+  var nameBox = form.studentName.toString();
 
-
-
-
-function autoComplete(){
- 
- for (var i = 1; i < studentObjects.length; ++i) {
+  for (var i = 1; i < studentObjects.length; ++i) {
     var rowData = studentObjects[i];
 
-    studentList[i] = rowData.studentName;
-    
+
+    var nn = rowData.studentName.indexOf(nameBox);
+    //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
+    if (nn === -1) {
+      continue;
     }
 
+    var studentEmail = rowData.email;
+  }
+  Logger.log(studentEmail);
 
-
-Logger.log(studentList);
-return studentList;
+  return studentEmail;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -196,4 +181,3 @@ function isAlnum(char) {
 function isDigit(char) {
   return char >= '0' && char <= '9';
 }
-
