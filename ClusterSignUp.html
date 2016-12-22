@@ -5,16 +5,10 @@
 </head>
 <body>
 
-<div id = "clusterSignUp">
-  <p>Cluster Sign Up</p>
-  <select id="selectCluster" >
-    <option value="" disabled selected>Please select a cluster</option> 
-  </select>
-</div>
 
+Cluster Sign Up
 <br>
 <br>
-
 <div id = "studentName">
   Please write your name as it appears on your yellow sheet. 
   <br>
@@ -28,18 +22,25 @@
 </div>
   
 <div id="studentEmail">
-
-
 </div>
-  <div id="radio" hidden= "hidden">
-    <form action="">
-      <input type="radio" name="email" value="yes"> yes<br>
-      <input type="radio" name="email" value="no"> no<br>
-     </form>
-  </div>  
+
+
+<div id="radio" hidden= "hidden">
+    <form id = "emailRadio">
+      <input type="radio" name="email" id ="radioYes" value="yes"> yes<br>
+      <input type="radio" name="email" id = "radioNo" value="no"> no<br>
+      <input type="submit" onClick="formSubmit1(event)" value = "Submit"/> <p>
+
+    </form>
+</div>  
   
   
-  
+<div id = "clusterSignUp" hidden= "hidden">
+  <p>Cluster Sign Up</p>
+  <select id="selectCluster" >
+    <option value="" disabled selected>Please select a cluster</option> 
+  </select>
+</div>
   
   
   
@@ -107,6 +108,29 @@
     }
 
 
+ function formSubmit1(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      var radioValue = document.getElementById("emailRadio").email.value;
+     console.log(radioValue);
+     
+    if(radioValue === "yes"){
+        var clusterSignUp = document.getElementById("clusterSignUp");
+          clusterSignUp.removeAttribute("hidden");
+
+    }
+  if(radioValue === "no"){
+      var div = document.createElement('div');
+
+      document.body.appendChild(div);  
+      div.innerHTML =  "Sorry that wasn't you! Please write your name in again!";
+        
+
+
+    }
+
+}
 
 
 
