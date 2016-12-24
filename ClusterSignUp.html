@@ -36,10 +36,14 @@ Cluster Sign Up
   
   
 <div id = "clusterSignUp" hidden= "hidden">
-  <p>Cluster Sign Up</p>
-  <select id="selectCluster" >
+    <form onsubmit="formSubmitCluster(event)" >
+
+  <select id="selectCluster" name ="clusterName" >
     <option value="" disabled selected>Please select a cluster</option> 
   </select>
+      <input type="submit" onClick="formSubmitCLuster(event)" value = "Submit"/> <p>
+
+  </form>
 </div>
   
   
@@ -92,6 +96,19 @@ Cluster Sign Up
 
  }
  
+ 
+ function onSuccess4(clusterSize){
+ 
+  var spinner = document.getElementById("spinner");
+   spinner.setAttribute("hidden", "hidden");
+ 
+   var radio = document.getElementById("radio");
+   radio.removeAttribute("hidden");
+   
+   console.log(clusterBox);
+
+ 
+ }
       
  google.script.run.withSuccessHandler(onSuccess1).getClusterList();
  google.script.run.withSuccessHandler(onSuccess2).autoComplete();
@@ -113,7 +130,7 @@ Cluster Sign Up
         event.preventDefault();
       }
       var radioValue = document.getElementById("emailRadio").email.value;
-     console.log(radioValue);
+     // console.log(radioValue);
      
     if(radioValue === "yes"){
         var clusterSignUp = document.getElementById("clusterSignUp");
@@ -121,7 +138,17 @@ Cluster Sign Up
 
     }
   if(radioValue === "no"){
+     
+     var studentEmail = document.getElementById("studentEmail");
+     studentEmail.setAttribute("hidden", "hidden");
+      
+       var radio = document.getElementById("radio");
+      radio.setAttribute("hidden", "hidden");
+
+
+
       var div = document.createElement('div');
+
 
       document.body.appendChild(div);  
       div.innerHTML =  "Sorry that wasn't you! Please write your name in again!";
@@ -133,7 +160,17 @@ Cluster Sign Up
 }
 
 
-
+ function formSubmitCLuster(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      
+      var spinner = document.getElementById("spinner");
+      spinner.removeAttribute("hidden");
+      
+      //console.log("hello");
+      google.script.run.withSuccessHandler(onSuccess4).checkAvailibility(document.forms[2]);
+    }
 
 
 

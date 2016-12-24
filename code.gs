@@ -66,6 +66,39 @@ function getStudentEmail(form) {
 
 
 
+
+function checkAvailibility(form){
+var clusterBox = form.clusterName;
+
+  for (var i = 1; i < clusterObjects.length; ++i) {
+    var rowData = clusterObjects[i];
+    
+    var nn = rowData.clusterName.indexOf(clusterBox);
+    
+    if (nn === -1) {
+      continue;
+    }
+
+    var clusterSize = rowData.size;
+    
+  }
+
+
+
+
+
+return clusterSize;
+}
+
+
+
+
+
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////
 //
 // The code below is reused from the 'Reading Spreadsheet data using JavaScript Objects'
