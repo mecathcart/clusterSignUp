@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html>
 <head>
   <base target="_top">
@@ -9,11 +9,11 @@
   Cluster Sign Up
   <br>
   <br>
+      <form>
   <div id = "studentName">
     Please write your name as it appears on your yellow sheet. 
     <br>
     <br>
-    <form>
       Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
       <datalist id="studentName-datalist"></datalist>
 
@@ -40,7 +40,7 @@
     </div>
     
     
-    <div id = "clusterVarification" hidden= "hidden">
+    <div id = "clusterVerification" hidden= "hidden">
       
     </div>
     
@@ -99,7 +99,7 @@
    var spinner = document.getElementById("spinner");
    spinner.setAttribute("hidden", "hidden");
    
-   var radio = document.getElementById("radio");
+   var radio = document.getElementById("radioEmail");
    radio.setAttribute("hidden", "hidden");
    
    var clusterVer = document.getElementById("clusterVerification");
@@ -130,8 +130,8 @@ function formSubmitEmail(event) {
   if (event) {
     event.preventDefault();
   }
-  var radioValue = document.getElementById("radioEmail").email.value;
-     // console.log(radioValue);
+  var radioValue = document.querySelector('input[name = "email"]:checked').value;
+      console.log(radioValue);
      
      if(radioValue === "yes"){
       var clusterSignUp = document.getElementById("clusterSignUp");
@@ -143,7 +143,7 @@ function formSubmitEmail(event) {
      var studentEmail = document.getElementById("studentEmail");
      studentEmail.setAttribute("hidden", "hidden");
      
-     var radio = document.getElementById("radio");
+     var radio = document.getElementById("radioEmail");
      radio.setAttribute("hidden", "hidden");
 
 
@@ -170,7 +170,7 @@ function formSubmitEmail(event) {
   spinner.removeAttribute("hidden");
   
       //console.log("hello");
-      google.script.run.withSuccessHandler(onSuccessSize).checkAvailibility(document.forms[2]);
+      google.script.run.withSuccessHandler(onSuccessSize).checkAvailibility(document.forms[0]);
     }
 
 
