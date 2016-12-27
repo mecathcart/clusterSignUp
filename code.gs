@@ -87,7 +87,7 @@ function checkLevel(form){
    
      lsLevel = numberLevel(lsLevel);
      rwLevel = numberLevel(rwLevel); 
-   
+     Logger.log("lsLevel is " +lsLevel);
     for (var i = 1; i < clusterObjects.length; ++i) {
       var rowDataCluster = clusterObjects[i];
     
@@ -99,8 +99,9 @@ function checkLevel(form){
     
       var lsClusterLevel = rowDataCluster.lsLevel;
       var rwClusterLevel = rowDataCluster.rwLevel;
+      Logger.log("lsClusterLevel is " + lsClusterLevel);
       
-      if(lsLevel > lsClusterLevel && rwLevel > rwClusterLevel) {
+      if(lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
       levelVer = true;
       }else{
       levelVer = false;
@@ -125,7 +126,7 @@ function checkLevel(form){
 
 function checkAvailibility(form){
 var clusterBox = form.clusterName;
-
+var clusterAvailible = false;  
   for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
     
@@ -136,6 +137,15 @@ var clusterBox = form.clusterName;
     }
 
     var clusterSize = rowData.size;
+    if(clusterSize < 6){
+      clusterSize++;
+      var sizeCell = clusterSheet.getRange(i,8);
+      Logger.log(sizeCell.getValue());
+      sizeCell.setValue(clusterSize);
+      clusterAvailible = true;
+    }else{
+      clusterAvailible = false;
+    }
     
   }
 
@@ -143,7 +153,7 @@ var clusterBox = form.clusterName;
 
 
 
-return clusterSize;
+return clusterAvailible;
 }
 
 
