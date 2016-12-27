@@ -13,11 +13,11 @@ Cluster Sign Up
   Please write your name as it appears on your yellow sheet. 
   <br>
   <br>
-  <form onsubmit="formSubmit(event)" >
+  <form>
     Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
     <datalist id="studentName-datalist"></datalist>
 
-    <input type="submit" onClick="formSubmit(event)" value = "Submit"/> <p>
+    <input type="submit" onClick="formSubmitName(event)" value = "Submit"/> <p>
   </form>
 </div>
   
@@ -29,7 +29,7 @@ Cluster Sign Up
     <form id = "emailRadio">
       <input type="radio" name="email" id ="radioYes" value="yes"> yes<br>
       <input type="radio" name="email" id = "radioNo" value="no"> no<br>
-      <input type="submit" onClick="formSubmit1(event)" value = "Submit"/> <p>
+      <input type="submit" onClick="formSubmitEmail(event)" value = "Submit"/> <p>
 
     </form>
 </div>  
@@ -47,7 +47,9 @@ Cluster Sign Up
 </div>
   
   
+  <div id = "clusterVarification" hidden= "hidden">
   
+  </div>
   
   
   
@@ -59,7 +61,7 @@ Cluster Sign Up
   
   
 
- function onSuccess1(clusterList) { 
+ function onSuccessCluster(clusterList) { 
    var dropdown = document.getElementById("selectCluster");
     // Loop through the array
    for (var i = 0; i < clusterList.length; ++i) {
@@ -69,7 +71,7 @@ Cluster Sign Up
   }   
  
  
- function onSuccess2(studentList){ 
+ function onSuccessStudents(studentList){ 
   var dataList = document.getElementById('studentName-datalist');
   var input = document.getElementById('studentName');    
     // Loop through the array
@@ -83,7 +85,7 @@ Cluster Sign Up
     }  
    }
  
- function onSuccess3(studentEmail){
+ function onSuccessEmail(studentEmail){
 
    var div = document.getElementById("studentEmail");
    div.innerHTML =  "Is this your email? " +studentEmail;
@@ -97,35 +99,39 @@ Cluster Sign Up
  }
  
  
- function onSuccess4(clusterSize){
+ function onSuccessSize(clusterSize){
  
-  var spinner = document.getElementById("spinner");
+   var spinner = document.getElementById("spinner");
    spinner.setAttribute("hidden", "hidden");
  
    var radio = document.getElementById("radio");
-   radio.removeAttribute("hidden");
+   radio.setAttribute("hidden", "hidden");
    
-   console.log(clusterBox);
+   var clusterVer = document.getElementById("clusterVerification");
+   clusterVer.removeAttribute("hidden");
+   clusterVer.innerHTML =  "Great! You are now registered for a cluster!";
+
+   console.log(clusterSize);
 
  
  }
       
- google.script.run.withSuccessHandler(onSuccess1).getClusterList();
- google.script.run.withSuccessHandler(onSuccess2).autoComplete();
+ google.script.run.withSuccessHandler(onSuccessCluster).getClusterList();
+ google.script.run.withSuccessHandler(onSuccessStudents).autoComplete();
 
 
- function formSubmit(event) {
+ function formSubmitName(event) {
       if (event) {
         event.preventDefault();
       }
       
       var spinner = document.getElementById("spinner");
       spinner.removeAttribute("hidden");
-      google.script.run.withSuccessHandler(onSuccess3).getStudentEmail(document.forms[0]);
+      google.script.run.withSuccessHandler(onSuccessEmail).getStudentEmail(document.forms[0]);
     }
 
 
- function formSubmit1(event) {
+ function formSubmitEmail(event) {
       if (event) {
         event.preventDefault();
       }
@@ -169,7 +175,7 @@ Cluster Sign Up
       spinner.removeAttribute("hidden");
       
       //console.log("hello");
-      google.script.run.withSuccessHandler(onSuccess4).checkAvailibility(document.forms[2]);
+      google.script.run.withSuccessHandler(onSuccessSize).checkAvailibility(document.forms[2]);
     }
 
 
