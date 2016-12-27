@@ -6,69 +6,64 @@
 <body>
 
 
-Cluster Sign Up
-<br>
-<br>
-<div id = "studentName">
-  Please write your name as it appears on your yellow sheet. 
+  Cluster Sign Up
   <br>
   <br>
-  <form>
-    Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
-    <datalist id="studentName-datalist"></datalist>
+  <div id = "studentName">
+    Please write your name as it appears on your yellow sheet. 
+    <br>
+    <br>
+    <form>
+      Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
+      <datalist id="studentName-datalist"></datalist>
 
-    <input type="submit" onClick="formSubmitName(event)" value = "Submit"/> <p>
-  </form>
-</div>
-  
-<div id="studentEmail">
-</div>
+      <input type="submit" onClick="formSubmitName(event)" value = "Submit"/> <p>
+    </div>
+    
+    <div id="studentEmail">
+    </div>
 
 
-<div id="radio" hidden= "hidden">
-    <form id = "emailRadio">
+    <div id="radioEmail" hidden= "hidden">
       <input type="radio" name="email" id ="radioYes" value="yes"> yes<br>
       <input type="radio" name="email" id = "radioNo" value="no"> no<br>
       <input type="submit" onClick="formSubmitEmail(event)" value = "Submit"/> <p>
+    </div>  
+    
+    
+    <div id = "clusterSignUp" hidden= "hidden">
 
-    </form>
-</div>  
-  
-  
-<div id = "clusterSignUp" hidden= "hidden">
-    <form onsubmit="formSubmitCluster(event)" >
-
-  <select id="selectCluster" name ="clusterName" >
-    <option value="" disabled selected>Please select a cluster</option> 
-  </select>
+      <select id="selectCluster" name ="clusterName" >
+        <option value="" disabled selected>Please select a cluster</option> 
+      </select>
       <input type="submit" onClick="formSubmitCLuster(event)" value = "Submit"/> <p>
-
+    </div>
+    
+    
+    <div id = "clusterVarification" hidden= "hidden">
+      
+    </div>
+    
+    
   </form>
-</div>
-  
-  
-  <div id = "clusterVarification" hidden= "hidden">
-  
-  </div>
-  
-  
+
   
   <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
 
 
 
   <script  type="text/javascript">
-  
-  
+    
+    
 
- function onSuccessCluster(clusterList) { 
-   var dropdown = document.getElementById("selectCluster");
+   function onSuccessCluster(clusterList) { 
+     var dropdown = document.getElementById("selectCluster");
     // Loop through the array
-   for (var i = 0; i < clusterList.length; ++i) {
+    for (var i = 0; i < clusterList.length; ++i) {
      //Append the element to the end of Array list
-      dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
+     dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
    }     
-  }   
+ }   
  
  
  function onSuccessStudents(studentList){ 
@@ -77,33 +72,33 @@ Cluster Sign Up
     // Loop through the array
     for (var i = 0; i < studentList.length; ++i) {
      // Append the element to the end of Array list
-      var option = document.createElement('option');
+     var option = document.createElement('option');
       // Set the value using the item in the JSON array.
       option.value = studentList[i];
       // Add the <option> element to the <datalist>.
       dataList.appendChild(option);
     }  
-   }
- 
- function onSuccessEmail(studentEmail){
+  }
+  
+  function onSuccessEmail(studentEmail){
 
    var div = document.getElementById("studentEmail");
    div.innerHTML =  "Is this your email? " +studentEmail;
-      
+   
    var spinner = document.getElementById("spinner");
    spinner.setAttribute("hidden", "hidden");
- 
-   var radio = document.getElementById("radio");
+   
+   var radio = document.getElementById("radioEmail");
    radio.removeAttribute("hidden");
 
  }
  
  
  function onSuccessSize(clusterSize){
- 
+   
    var spinner = document.getElementById("spinner");
    spinner.setAttribute("hidden", "hidden");
- 
+   
    var radio = document.getElementById("radio");
    radio.setAttribute("hidden", "hidden");
    
@@ -113,67 +108,67 @@ Cluster Sign Up
 
    console.log(clusterSize);
 
- 
+   
  }
-      
+ 
  google.script.run.withSuccessHandler(onSuccessCluster).getClusterList();
  google.script.run.withSuccessHandler(onSuccessStudents).autoComplete();
 
 
  function formSubmitName(event) {
-      if (event) {
-        event.preventDefault();
-      }
-      
-      var spinner = document.getElementById("spinner");
-      spinner.removeAttribute("hidden");
-      google.script.run.withSuccessHandler(onSuccessEmail).getStudentEmail(document.forms[0]);
-    }
-
-
- function formSubmitEmail(event) {
-      if (event) {
-        event.preventDefault();
-      }
-      var radioValue = document.getElementById("emailRadio").email.value;
-     // console.log(radioValue);
-     
-    if(radioValue === "yes"){
-        var clusterSignUp = document.getElementById("clusterSignUp");
-          clusterSignUp.removeAttribute("hidden");
-
-    }
-  if(radioValue === "no"){
-     
-     var studentEmail = document.getElementById("studentEmail");
-     studentEmail.setAttribute("hidden", "hidden");
-      
-       var radio = document.getElementById("radio");
-      radio.setAttribute("hidden", "hidden");
-
-
-
-      var div = document.createElement('div');
-
-
-      document.body.appendChild(div);  
-      div.innerHTML =  "Sorry that wasn't you! Please write your name in again!";
-        
-
-
-    }
-
+  if (event) {
+    event.preventDefault();
+  }
+  
+  var spinner = document.getElementById("spinner");
+  spinner.removeAttribute("hidden");
+  google.script.run.withSuccessHandler(onSuccessEmail).getStudentEmail(document.forms[0]);
 }
 
 
+function formSubmitEmail(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  var radioValue = document.getElementById("radioEmail").email.value;
+     // console.log(radioValue);
+     
+     if(radioValue === "yes"){
+      var clusterSignUp = document.getElementById("clusterSignUp");
+      clusterSignUp.removeAttribute("hidden");
+
+    }
+    if(radioValue === "no"){
+     
+     var studentEmail = document.getElementById("studentEmail");
+     studentEmail.setAttribute("hidden", "hidden");
+     
+     var radio = document.getElementById("radio");
+     radio.setAttribute("hidden", "hidden");
+
+
+
+     var div = document.createElement('div');
+
+
+     document.body.appendChild(div);  
+     div.innerHTML =  "Sorry that wasn't you! Please write your name in again!";
+     
+
+
+   }
+
+ }
+
+
  function formSubmitCLuster(event) {
-      if (event) {
-        event.preventDefault();
-      }
-      
-      var spinner = document.getElementById("spinner");
-      spinner.removeAttribute("hidden");
-      
+  if (event) {
+    event.preventDefault();
+  }
+  
+  var spinner = document.getElementById("spinner");
+  spinner.removeAttribute("hidden");
+  
       //console.log("hello");
       google.script.run.withSuccessHandler(onSuccessSize).checkAvailibility(document.forms[2]);
     }
