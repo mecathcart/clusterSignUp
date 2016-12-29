@@ -11,24 +11,26 @@ var ss = SpreadsheetApp.openById('1TqcXN0mufW1KlRP8NeJuQVOE-ZPZHxAfhPM5WxwuZgY')
 var clusterSheet = ss.getSheets()[1];
 var studentSheet = ss.getSheets()[0];
 
+//for the dropdown lists and autocomplete
 var clusterList = [];
 var studentList = [];
 
+//makes javascript objects out of the sheets
 var clusterSheetRange = clusterSheet.getRange(1, 1, clusterSheet.getMaxRows(), clusterSheet.getMaxColumns());
 var clusterObjects = getRowsData(clusterSheet, clusterSheetRange);
 
 var studentSheetRange = studentSheet.getRange(1, 1, studentSheet.getMaxRows(), studentSheet.getMaxColumns());
 var studentObjects = getRowsData(studentSheet, studentSheetRange);
 
-
 //retrieves the list of clusters
 function getClusterList() {
   for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
-    clusterList[i] = rowData.clusterName;
+    var clusterName = rowData.clusterName + " " + rowData.time;
+    clusterList[i] = clusterName;
+ 
   }
   clusterList.shift();
-  // Logger.log(clusterList);
   return clusterList;
 }
 
@@ -38,7 +40,6 @@ function autoComplete() {
     var rowData = studentObjects[i];
     studentList[i] = rowData.studentName;
   }
-  //Logger.log(studentList);
   return studentList;
 }
 
@@ -46,96 +47,78 @@ function autoComplete() {
 //retrieves student's email
 function getStudentEmail(form) {
   var nameBox = form.studentName.toString();
-
+  //loops through the students
   for (var i = 1; i < studentObjects.length; ++i) {
     var rowData = studentObjects[i];
-
-
     var nn = rowData.studentName.indexOf(nameBox);
     //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
     if (nn === -1) {
       continue;
     }
-
     var studentEmail = rowData.email;
   }
-  Logger.log(studentEmail);
-
   return studentEmail;
 }
 
-
+//checks the level of student and sees whether the students are eligible for the cluster they want to take
 function checkLevel(form){
   var clusterBox = form.clusterName;
+  clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
   var nameBox = form.studentName.toString();
   var levelVer = false;
-
-
-   for (var i = 1; i < studentObjects.length; ++i) {
+  //loops through the students
+  for (var i = 1; i < studentObjects.length; ++i) {
     var rowData = studentObjects[i];
-
-
     var nn = rowData.studentName.indexOf(nameBox);
     //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
     if (nn === -1) {
       continue;
     }
-
+   //retrieving student levels
     var lsLevel = rowData.lsLevel;
-    var rwLevel = rowData.rwLevel;
-    
-   
+    var rwLevel = rowData.rwLevel;   
+    //converts levels into numbers
      lsLevel = numberLevel(lsLevel);
-     rwLevel = numberLevel(rwLevel); 
-     Logger.log("lsLevel is " +lsLevel);
+     rwLevel = numberLevel(rwLevel);   
+    //loops through clusters
     for (var i = 1; i < clusterObjects.length; ++i) {
       var rowDataCluster = clusterObjects[i];
-    
       var clusterNN = rowDataCluster.clusterName.indexOf(clusterBox);
-    
        if (clusterNN === -1) {
         continue;
-      }
-    
+      }    
+     //determines cluster level
       var lsClusterLevel = rowDataCluster.lsLevel;
-      var rwClusterLevel = rowDataCluster.rwLevel;
-      Logger.log("lsClusterLevel is " + lsClusterLevel);
-      
+      var rwClusterLevel = rowDataCluster.rwLevel;      
+      //verifies whether student is a high enough level  
       if(lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
       levelVer = true;
       }else{
       levelVer = false;
-      }
-  }
-    
-  }
-
-
-
-
-
-
+      }//closes if clause
+    }//closes cluster loop
+  }//closes student loop
   return levelVer;
 }
 
 
-
+//checks whether cluster is full or not and adds student to roster if the class is availible
 function checkAvailibility(form){
 var clusterBox = form.clusterName;
+//clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
 var clusterAvailible = false;  
+  //loops through clusters
   for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
-    
-    var nn = rowData.clusterName.indexOf(clusterBox);
-    
+    var clusterNameAndTime = rowData.clusterName + " " + rowData.time;
+    Logger.log(clusterNameAndTime);
+    var nn = clusterNameAndTime.indexOf(clusterBox); 
     if (nn === -1) {
       continue;
     }
-
     var clusterSize = rowData.size;
     if(clusterSize < 6){
-      clusterSize++;
-      
+      clusterSize++;   
     //  var columnSize = rowData.indexOf(size);
     //  Logger.log(columnSize);
       var sizeCell = clusterSheet.getRange(i+1,8);
@@ -156,52 +139,38 @@ var clusterAvailible = false;
     }else{
       clusterAvailible = false;
     }  
-  }
-
+  }//closes for loop
 return clusterAvailible;
 }
 
 
-
-
+//retrieves student's tutoring schedule
 function tutorDrop(form){
   var nameBox = form.studentName;
   for (var i = 1; i < studentObjects.length; ++i) {
     var rowData = studentObjects[i];
-
-
     var nn = rowData.studentName.indexOf(nameBox);
     //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
     if (nn === -1) {
       continue;
     }
+      //cleans data
       rowData.day1 = spellDay(rowData.day1);
       rowData.day2 = spellDay(rowData.day2);
       rowData.time1 = extractTime(rowData.time1);
       rowData.time2 = extractTime(rowData.time2);
-      
-     var tutor1 = [rowData.t1name, rowData.time1, rowData.day1];
-     var tutor2 = [rowData.t2name, rowData.time2, rowData.day2];
-     
-     tutor1 = tutor1.toString();
-     tutor2 = tutor2.toString();
-     tutor1 = tutor1.replace(/,/g, "");
-     tutor2 = tutor2.replace(/,/g, "");
-
-     
-     var tutorArray = [tutor1, tutor2];
-     
-     
-
-     Logger.log(tutorArray);
- 
-  }
-
+       //compiles tutuos
+      var tutor1 = [rowData.t1name, rowData.time1, rowData.day1];
+      var tutor2 = [rowData.t2name, rowData.time2, rowData.day2];
+      tutor1 = tutor1.toString();
+      tutor2 = tutor2.toString();
+      tutor1 = tutor1.replace(/,/g, "");
+      tutor2 = tutor2.replace(/,/g, "");
+     //puts both tutors ino an array
+      var tutorArray = [tutor1, tutor2]; 
+  }//closes for loop
   return tutorArray;
-
 }
-
-
 
 
 //spells out days of the week.      
@@ -261,15 +230,11 @@ function extractTime(time) {
 };
 
 
-
-
-
-
-
-
-
 function numberLevel(level) {
   switch (level) {
+    case "Pre-I A":
+      level = "0";
+      break;
     case "I":
       level = "1";
       break;
