@@ -65,13 +65,13 @@ function getStudentEmail(form) {
 }
 
 
-function checkLevel(form){
+function checkLevel(form) {
   var clusterBox = form.clusterName;
   var nameBox = form.studentName.toString();
   var levelVer = false;
 
 
-   for (var i = 1; i < studentObjects.length; ++i) {
+  for (var i = 1; i < studentObjects.length; ++i) {
     var rowData = studentObjects[i];
 
 
@@ -83,35 +83,32 @@ function checkLevel(form){
 
     var lsLevel = rowData.lsLevel;
     var rwLevel = rowData.rwLevel;
-    
-   
-     lsLevel = numberLevel(lsLevel);
-     rwLevel = numberLevel(rwLevel); 
-     Logger.log("lsLevel is " +lsLevel);
+
+
+    lsLevel = numberLevel(lsLevel);
+    rwLevel = numberLevel(rwLevel);
+    Logger.log("lsLevel is " + lsLevel);
     for (var i = 1; i < clusterObjects.length; ++i) {
       var rowDataCluster = clusterObjects[i];
-    
+
       var clusterNN = rowDataCluster.clusterName.indexOf(clusterBox);
-    
-       if (clusterNN === -1) {
+
+      if (clusterNN === -1) {
         continue;
       }
-    
+
       var lsClusterLevel = rowDataCluster.lsLevel;
       var rwClusterLevel = rowDataCluster.rwLevel;
       Logger.log("lsClusterLevel is " + lsClusterLevel);
-      
-      if(lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
-      levelVer = true;
-      }else{
-      levelVer = false;
+
+      if (lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
+        levelVer = true;
+      } else {
+        levelVer = false;
       }
+    }
+
   }
-    
-  }
-
-
-
 
 
 
@@ -120,40 +117,51 @@ function checkLevel(form){
 
 
 
-
-
-
-
-function checkAvailibility(form){
-var clusterBox = form.clusterName;
-var clusterAvailible = false;  
+function checkAvailibility(form) {
+  var clusterBox = form.clusterName;
+  var clusterAvailible = false;
   for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
-    
+
     var nn = rowData.clusterName.indexOf(clusterBox);
-    
+
     if (nn === -1) {
       continue;
     }
 
     var clusterSize = rowData.size;
-    if(clusterSize < 6){
+    if (clusterSize < 6) {
       clusterSize++;
-      var sizeCell = clusterSheet.getRange(i,8);
-      Logger.log(sizeCell.getValue());
+
+      //  var columnSize = rowData.indexOf(size);
+      //  Logger.log(columnSize);
+      var sizeCell = clusterSheet.getRange(i + 1, 8);
+      //    Logger.log(sizeCell.value);
       sizeCell.setValue(clusterSize);
+      var roster = rowData.roster;
+      if (roster === undefined) {
+        roster = [];
+      } else {
+        roster = roster.split();
+      }
+      roster.push(form.studentName);
+      roster = roster.toString();
+      Logger.log(roster);
+      var rosterCell = clusterSheet.getRange(i + 1, 9);
+      rosterCell.setValue(roster);
+
+
+
       clusterAvailible = true;
-    }else{
+    } else {
       clusterAvailible = false;
     }
-    
+
   }
 
 
 
-
-
-return clusterAvailible;
+  return clusterAvailible;
 }
 
 
@@ -163,27 +171,24 @@ function numberLevel(level) {
     case "I":
       level = "1";
       break;
-   case "II":
+    case "II":
       level = "2";
       break;
-   case "III":
+    case "III":
       level = "3";
-      break;   
-   case "IV":
+      break;
+    case "IV":
       level = "4";
-      break;  
-   case "V":
+      break;
+    case "V":
       level = "5";
       break;
-   case "VI":
+    case "VI":
       level = "5";
       break;
   }
   return level;
 };
-
-
-
 
 
 
