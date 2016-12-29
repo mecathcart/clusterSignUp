@@ -1,15 +1,14 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <base target="_top">
 </head>
 <body>
-
-
   Cluster Sign Up
   <br>
   <br>
-      <form>
+  <form>
+  
   <div id = "studentName">
     Please write your name as it appears on your yellow sheet. 
     <br>
@@ -17,32 +16,32 @@
       Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
       <datalist id="studentName-datalist"></datalist>
 
-      <input type="submit" onClick="formSubmitName(event)" value = "Submit"/> <p>
-    </div>
+      <input type="submit" onClick="formSubmitName(event)" value = "Submit"/> <p> 
+  </div>
     
-    <div id="studentEmail">
-    </div>
+  <div id="studentEmail">
+  </div>
 
 
-    <div id="radioEmail" hidden= "hidden">
+  <div id="radioEmail" hidden= "hidden">
       <input type="radio" name="email" id ="radioYes" value="yes"> yes<br>
       <input type="radio" name="email" id = "radioNo" value="no"> no<br>
       <input type="submit" onClick="formSubmitEmail(event)" value = "Submit"/> <p>
-    </div>  
+  </div>  
     
     
-    <div id = "clusterSignUp" hidden= "hidden">
-
+  <div id = "clusterSignUp" hidden= "hidden">
       <select id="selectCluster" name ="clusterName" >
         <option value="" disabled selected>Please select a cluster</option> 
       </select>
       <input type="submit" onClick="formSubmitCLuster(event)" value = "Submit"/> <p>
-    </div>
+  </div>
     
     
-    <div id = "clusterVerification" hidden= "hidden">
-      
-    </div>
+  <div id = "clusterVerification" hidden= "hidden">
+  </div>
+    
+
     
     
   </form>
@@ -62,8 +61,8 @@
     for (var i = 0; i < clusterList.length; ++i) {
      //Append the element to the end of Array list
      dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
-   }     
- }   
+     }     
+   }   
  
  
  function onSuccessStudents(studentList){ 
@@ -90,25 +89,51 @@
    
    var radio = document.getElementById("radioEmail");
    radio.removeAttribute("hidden");
-
  }
  
  
- function onSuccessSize(clusterSize){
-   
+ function onSuccessSize(clusterAvailible){
+    var clusterVer = document.getElementById("clusterVerification");
+    clusterVer.removeAttribute("hidden");
+     if(clusterAvailible === true){
+    
+        clusterVer.innerHTML =  "Great! Which tutor would you like to drop?";
+        google.script.run.withSuccessHandler(onSuccessTutorDrop).tutorDrop(document.forms[0]);
+    
+}else{
+   console.log("Bummer!");
+    var clusterVer = document.getElementById("clusterVerification");
+    clusterVer.removeAttribute("hidden");
+    clusterVer.innerHTML =  "I'm sorry but the cluster you've selected is full. Please select another cluster.";
+   }
+ }
+ 
+ 
+ function onSuccessTutorDrop(tutor1){
+ console.log(tutor1);
+ }
+ 
+ function onSuccessLevel(levelVer){
+ 
    var spinner = document.getElementById("spinner");
    spinner.setAttribute("hidden", "hidden");
    
    var radio = document.getElementById("radioEmail");
    radio.setAttribute("hidden", "hidden");
    
-   var clusterVer = document.getElementById("clusterVerification");
-   clusterVer.removeAttribute("hidden");
-   clusterVer.innerHTML =  "Great! You are now registered for a cluster!";
-
-   console.log(clusterSize);
-
-   
+   if(levelVer === true){
+   google.script.run.withSuccessHandler(onSuccessSize).checkAvailibility(document.forms[0]);
+ //  console.log("When can I sign up?");
+   }else{
+   console.log("Bummer!");
+    var clusterVer = document.getElementById("clusterVerification");
+    clusterVer.removeAttribute("hidden");
+    clusterVer.innerHTML =  "I'm sorry but you are not the right level for this cluster. Please select another cluster.";
+   }
+ 
+ 
+ console.log(levelVer);
+ 
  }
  
  google.script.run.withSuccessHandler(onSuccessCluster).getClusterList();
@@ -131,7 +156,6 @@ function formSubmitEmail(event) {
     event.preventDefault();
   }
   var radioValue = document.querySelector('input[name = "email"]:checked').value;
-      console.log(radioValue);
      
      if(radioValue === "yes"){
       var clusterSignUp = document.getElementById("clusterSignUp");
@@ -170,7 +194,7 @@ function formSubmitEmail(event) {
   spinner.removeAttribute("hidden");
   
       //console.log("hello");
-      google.script.run.withSuccessHandler(onSuccessSize).checkAvailibility(document.forms[0]);
+      google.script.run.withSuccessHandler(onSuccessLevel).checkLevel(document.forms[0]);
     }
 
 
