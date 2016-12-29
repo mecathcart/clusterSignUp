@@ -65,13 +65,13 @@ function getStudentEmail(form) {
 }
 
 
-function checkLevel(form) {
+function checkLevel(form){
   var clusterBox = form.clusterName;
   var nameBox = form.studentName.toString();
   var levelVer = false;
 
 
-  for (var i = 1; i < studentObjects.length; ++i) {
+   for (var i = 1; i < studentObjects.length; ++i) {
     var rowData = studentObjects[i];
 
 
@@ -83,32 +83,35 @@ function checkLevel(form) {
 
     var lsLevel = rowData.lsLevel;
     var rwLevel = rowData.rwLevel;
-
-
-    lsLevel = numberLevel(lsLevel);
-    rwLevel = numberLevel(rwLevel);
-    Logger.log("lsLevel is " + lsLevel);
+    
+   
+     lsLevel = numberLevel(lsLevel);
+     rwLevel = numberLevel(rwLevel); 
+     Logger.log("lsLevel is " +lsLevel);
     for (var i = 1; i < clusterObjects.length; ++i) {
       var rowDataCluster = clusterObjects[i];
-
+    
       var clusterNN = rowDataCluster.clusterName.indexOf(clusterBox);
-
-      if (clusterNN === -1) {
+    
+       if (clusterNN === -1) {
         continue;
       }
-
+    
       var lsClusterLevel = rowDataCluster.lsLevel;
       var rwClusterLevel = rowDataCluster.rwLevel;
       Logger.log("lsClusterLevel is " + lsClusterLevel);
-
-      if (lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
-        levelVer = true;
-      } else {
-        levelVer = false;
+      
+      if(lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
+      levelVer = true;
+      }else{
+      levelVer = false;
       }
-    }
-
   }
+    
+  }
+
+
+
 
 
 
@@ -117,52 +120,151 @@ function checkLevel(form) {
 
 
 
-function checkAvailibility(form) {
-  var clusterBox = form.clusterName;
-  var clusterAvailible = false;
+function checkAvailibility(form){
+var clusterBox = form.clusterName;
+var clusterAvailible = false;  
   for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
-
+    
     var nn = rowData.clusterName.indexOf(clusterBox);
-
+    
     if (nn === -1) {
       continue;
     }
 
     var clusterSize = rowData.size;
-    if (clusterSize < 6) {
+    if(clusterSize < 6){
       clusterSize++;
-
-      //  var columnSize = rowData.indexOf(size);
-      //  Logger.log(columnSize);
-      var sizeCell = clusterSheet.getRange(i + 1, 8);
-      //    Logger.log(sizeCell.value);
+      
+    //  var columnSize = rowData.indexOf(size);
+    //  Logger.log(columnSize);
+      var sizeCell = clusterSheet.getRange(i+1,8);
+  //    Logger.log(sizeCell.value);
       sizeCell.setValue(clusterSize);
       var roster = rowData.roster;
-      if (roster === undefined) {
+      if(roster === undefined){
         roster = [];
-      } else {
-        roster = roster.split();
+      }else{
+         roster = roster.split();
       }
       roster.push(form.studentName);
       roster = roster.toString();
       Logger.log(roster);
-      var rosterCell = clusterSheet.getRange(i + 1, 9);
-      rosterCell.setValue(roster);
-
-
-
+      var rosterCell = clusterSheet.getRange(i+1,9);
+      rosterCell.setValue(roster);      
       clusterAvailible = true;
-    } else {
+    }else{
       clusterAvailible = false;
-    }
-
+    }  
   }
 
-
-
-  return clusterAvailible;
+return clusterAvailible;
 }
+
+
+
+
+function tutorDrop(form){
+  var nameBox = form.studentName;
+  for (var i = 1; i < studentObjects.length; ++i) {
+    var rowData = studentObjects[i];
+
+
+    var nn = rowData.studentName.indexOf(nameBox);
+    //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
+    if (nn === -1) {
+      continue;
+    }
+      rowData.day1 = spellDay(rowData.day1);
+      rowData.day2 = spellDay(rowData.day2);
+      rowData.time1 = extractTime(rowData.time1);
+      rowData.time2 = extractTime(rowData.time2);
+      
+     var tutor1 = [rowData.t1name, rowData.time1, rowData.day1];
+     var tutor2 = [rowData.t2name, rowData.time2, rowData.day2];
+     
+     tutor1 = tutor1.toString();
+     tutor2 = tutor2.toString();
+     tutor1 = tutor1.replace(/,/g, "");
+     tutor2 = tutor2.replace(/,/g, "");
+
+     
+     var tutorArray = [tutor1, tutor2];
+     
+     
+
+     Logger.log(tutorArray);
+ 
+  }
+
+  return tutorArray;
+
+}
+
+
+
+
+//spells out days of the week.      
+function spellDay(day) {
+  switch (day) {
+    case "-":
+      day = "-";
+      break;
+    case "M":
+      day = "Monday";
+      break;
+    case "T":
+      day = "Tuesday";
+      break;
+    case "W":
+      day = "Wednesday";
+      break;
+    case "R":
+      day = "Thursday";
+      break;
+    case "MW":
+      day = "Monday and Wednesday";
+      break;
+    case "TR":
+      day = "Tuesday and Thursday";
+      break;
+
+  }
+  var on = " on ";
+  day = on.concat(day);
+  return day;
+};
+
+
+//function extracts time  
+function extractTime(time) {
+
+  if (time === "-") {
+    time = "-";
+  } else {
+    var hour = time.getHours();
+ //   hour = hour - 3;
+    var minute = time.getMinutes();
+    if (minute === 0) {
+      minute = minute.toString();
+      minute = minute.concat("0pm");
+    } else {
+      minute = minute.toString();
+      minute = minute.concat("am");
+    }
+    time = hour.toString().concat(":").concat(minute);
+  };
+  
+  var at = " at ";
+  time = at.concat(time);
+  return time;
+};
+
+
+
+
+
+
 
 
 
@@ -171,24 +273,27 @@ function numberLevel(level) {
     case "I":
       level = "1";
       break;
-    case "II":
+   case "II":
       level = "2";
       break;
-    case "III":
+   case "III":
       level = "3";
-      break;
-    case "IV":
+      break;   
+   case "IV":
       level = "4";
-      break;
-    case "V":
+      break;  
+   case "V":
       level = "5";
       break;
-    case "VI":
+   case "VI":
       level = "5";
       break;
   }
   return level;
 };
+
+
+
 
 
 
