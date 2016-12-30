@@ -44,7 +44,14 @@
 
   <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
 
-
+<div id="tutorDrop" hidden= "hidden">
+       <select id="selectTutor" name ="selectTutor" >
+        <option value="" disabled selected>Please select a tutor</option> 
+        <br>
+        <br>
+      </select>
+      <input type="submit" onClick="formSubmitTutorDrop(event)" value = "Submit"/> <p>
+  </div> 
 
 
 
@@ -117,30 +124,25 @@
   // var clusterSignUp = document.getElementById("clusterSignUp");
   // clusterSignUp.setAttribute("hidden", "hidden");
  
-   if(tutorArray[0].indexOf("-") === 0){
-        console.log(tutorArray[1].indexOf("-")); 
-   }else{
-    var btn1 = document.createElement("BUTTON");
-    var t1 = document.createTextNode(tutorArray[0]);       // Create a text node
-    btn1.appendChild(t1);                                // Append the text to <button>
-    document.body.appendChild(btn1);                    // Append <button> to <body>
-   }
-   
+  // if(tutorArray[0].indexOf("-") === 0){
+    //    console.log(tutorArray[1].indexOf("-")); 
+  // }
   
-   if(tutorArray[1].indexOf("-") === 0){
-        console.log(tutorArray[1].indexOf("-")); 
-   }else{  
-    var divOr = document.createElement('div');
-    divOr.innerHTML =  "or";
-    document.body.appendChild(divOr);                    // Append <button> to <body>
-    var btn2 = document.createElement("BUTTON");
-    var t2 = document.createTextNode(tutorArray[1]);       // Create a text node
-    btn2.appendChild(t2);                                // Append the text to <button>
-    document.body.appendChild(btn2);                    // Append <button> to <body>
-    }
- console.log(tutorArray);
+   var tutorDrop = document.getElementById("tutorDrop");
+      tutorDrop.removeAttribute("hidden");
+  
+     var dropdown = document.getElementById("selectTutor");
+    // Loop through the array
+    for (var i = 0; i < tutorArray.length; ++i) {
+     //Append the element to the end of Array list
+     dropdown[dropdown.length] = new Option(tutorArray[i], tutorArray[i]);
+     }
+ 
  }
  
+ function onSuccessTutorDrop(){
+ console.log("I got clicked");
+ }
  
  //displays results of level check and calls cluster availibility function
  function onSuccessLevel(levelVer){
@@ -219,7 +221,11 @@ function formSubmitEmail(event) {
  }
 
 
+function formSubmitTutorDrop(event){
+    google.script.run.withSuccessHandler(onSuccessTutorDrop).tutorDrop(document.forms[0]);
 
+
+}
 
 
 

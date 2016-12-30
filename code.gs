@@ -28,7 +28,6 @@ function getClusterList() {
     var rowData = clusterObjects[i];
     var clusterName = rowData.clusterName + " " + rowData.time;
     clusterList[i] = clusterName;
- 
   }
   clusterList.shift();
   return clusterList;
@@ -104,6 +103,7 @@ function checkLevel(form){
 
 //checks whether cluster is full or not and adds student to roster if the class is availible
 function checkAvailibility(form){
+Logger.log("blah blah blah");
 var clusterBox = form.clusterName;
 //clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
 var clusterAvailible = false;  
@@ -111,18 +111,18 @@ var clusterAvailible = false;
   for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
     var clusterNameAndTime = rowData.clusterName + " " + rowData.time;
-    Logger.log(clusterNameAndTime);
     var nn = clusterNameAndTime.indexOf(clusterBox); 
     if (nn === -1) {
       continue;
     }
+//    Logger.log("adfkjas;dfkajf;");
     var clusterSize = rowData.size;
     if(clusterSize < 6){
       clusterSize++;   
     //  var columnSize = rowData.indexOf(size);
     //  Logger.log(columnSize);
       var sizeCell = clusterSheet.getRange(i+1,8);
-  //    Logger.log(sizeCell.value);
+      Logger.log(sizeCell.value);
       sizeCell.setValue(clusterSize);
       var roster = rowData.roster;
       if(roster === undefined){
@@ -145,7 +145,7 @@ return clusterAvailible;
 
 
 //retrieves student's tutoring schedule
-function tutorDrop(form){
+function getTutors(form){
   var nameBox = form.studentName;
   for (var i = 1; i < studentObjects.length; ++i) {
     var rowData = studentObjects[i];
@@ -159,7 +159,7 @@ function tutorDrop(form){
       rowData.day2 = spellDay(rowData.day2);
       rowData.time1 = extractTime(rowData.time1);
       rowData.time2 = extractTime(rowData.time2);
-       //compiles tutuos
+       //compiles tutors
       var tutor1 = [rowData.t1name, rowData.time1, rowData.day1];
       var tutor2 = [rowData.t2name, rowData.time2, rowData.day2];
       tutor1 = tutor1.toString();
@@ -228,6 +228,14 @@ function extractTime(time) {
   time = at.concat(time);
   return time;
 };
+
+
+function tutorDrop(tutorDrop){
+  Logger.log("I got clicked");
+  
+  }
+
+
 
 
 function numberLevel(level) {
