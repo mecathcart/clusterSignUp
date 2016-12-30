@@ -1,387 +1,245 @@
-//this function creates the html
-function doGet() {
-  return HtmlService
-    .createHtmlOutputFromFile('ClusterSignUp')
-    .setSandboxMode(HtmlService.SandboxMode.IFRAME);
-}
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+</head>
+<body>
+  Cluster Sign Up
+  <br>
+  <br>
+  <form>
+  
+  <div id = "studentName">
+    Please write your name as it appears on your yellow sheet. 
+    <br>
+    <br>
+      Family Name, First Name: <input type="text" value=" " name ="studentName" list="studentName-datalist" id = "studentName"/>
+      <datalist id="studentName-datalist"></datalist>
+
+      <input type="submit" onClick="formSubmitName(event)" value = "Submit"/> <p> 
+  </div>
+    
+  <div id="studentEmail">
+  </div>
+
+  <div id="radioEmail" hidden= "hidden">
+      <input type="radio" name="email" id ="radioYes" value="yes"> yes<br>
+      <input type="radio" name="email" id = "radioNo" value="no"> no<br>
+      <input type="submit" onClick="formSubmitEmail(event)" value = "Submit"/> <p>
+  </div>  
+    
+    
+  <div id = "clusterSignUp" hidden= "hidden">
+      <select id="selectCluster" name ="clusterName" >
+        <option value="" disabled selected>Please select a cluster</option> 
+      </select>
+      <input type="submit" onClick="formSubmitCluster(event)" value = "Submit"/> <p>
+  </div>
+    
+    
+  <div id = "clusterVerification" hidden= "hidden">
+  </div>
+   
+<div id="tutorDrop" hidden= "hidden">
+  <br>
+       <select id="selectTutor" name ="selectTutor" >
+        <option value="" disabled selected>Please select a tutor</option> 
+      </select>
+      <input type="submit" onClick="formSubmitTutorDrop(event)" value = "Submit"/> <p>
+  </div> 
 
 
-//identifies spreadsheet
-var ss = SpreadsheetApp.openById('1TqcXN0mufW1KlRP8NeJuQVOE-ZPZHxAfhPM5WxwuZgY');
-var clusterSheet = ss.getSheets()[1];
-var studentSheet = ss.getSheets()[0];
 
-//for the dropdown lists and autocomplete
-var clusterList = [];
-var studentList = [];
-
-//makes javascript objects out of the sheets
-var clusterSheetRange = clusterSheet.getRange(1, 1, clusterSheet.getMaxRows(), clusterSheet.getMaxColumns());
-var clusterObjects = getRowsData(clusterSheet, clusterSheetRange);
-
-var studentSheetRange = studentSheet.getRange(1, 1, studentSheet.getMaxRows(), studentSheet.getMaxColumns());
-var studentObjects = getRowsData(studentSheet, studentSheetRange);
-
-//retrieves the list of clusters
-function getClusterList() {
-  for (var i = 1; i < clusterObjects.length; ++i) {
-    var rowData = clusterObjects[i];
-    var clusterName = rowData.clusterName + " " + rowData.time;
-    clusterList[i] = clusterName;
-  }
-  clusterList.shift();
-  return clusterList;
-}
-
-//retrieves the list of students
-function autoComplete() {
-  for (var i = 1; i < studentObjects.length; ++i) {
-    var rowData = studentObjects[i];
-    studentList[i] = rowData.studentName;
-  }
-  return studentList;
-}
+  
 
 
-//retrieves student's email
-function getStudentEmail(form) {
-  var nameBox = form.studentName.toString();
-  //loops through the students
-  for (var i = 1; i < studentObjects.length; ++i) {
-    var rowData = studentObjects[i];
-    var nn = rowData.studentName.indexOf(nameBox);
-    //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
-    if (nn === -1) {
-      continue;
-    }
-    var studentEmail = rowData.email;
-  }
-  return studentEmail;
-}
 
-//checks the level of student and sees whether the students are eligible for the cluster they want to take
-function checkLevel(form){
-  var clusterBox = form.clusterName;
-  clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
-  var nameBox = form.studentName.toString();
-  var levelVer = false;
-  //loops through the students
-  for (var i = 1; i < studentObjects.length; ++i) {
-    var rowData = studentObjects[i];
-    var nn = rowData.studentName.indexOf(nameBox);
-    //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
-    if (nn === -1) {
-      continue;
-    }
-   //retrieving student levels
-    var lsLevel = rowData.lsLevel;
-    var rwLevel = rowData.rwLevel;   
-    //converts levels into numbers
-     lsLevel = numberLevel(lsLevel);
-     rwLevel = numberLevel(rwLevel);   
-    //loops through clusters
-    for (var i = 1; i < clusterObjects.length; ++i) {
-      var rowDataCluster = clusterObjects[i];
-      var clusterNN = rowDataCluster.clusterName.indexOf(clusterBox);
-       if (clusterNN === -1) {
-        continue;
-      }    
-     //determines cluster level
-      var lsClusterLevel = rowDataCluster.lsLevel;
-      var rwClusterLevel = rowDataCluster.rwLevel;      
-      //verifies whether student is a high enough level  
-      if(lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
-      levelVer = true;
-      }else{
-      levelVer = false;
-      }//closes if clause
-    }//closes cluster loop
-  }//closes student loop
-  return levelVer;
-}
+  </form>
+
+  <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
 
 
-//checks whether cluster is full or not and adds student to roster if the class is availible
-function checkAvailibility(form){
-Logger.log("blah blah blah");
-var clusterBox = form.clusterName;
-//clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
-var clusterAvailible = false;  
-  //loops through clusters
-  for (var i = 1; i < clusterObjects.length; ++i) {
-    var rowData = clusterObjects[i];
-    var clusterNameAndTime = rowData.clusterName + " " + rowData.time;
-    var nn = clusterNameAndTime.indexOf(clusterBox); 
-    if (nn === -1) {
-      continue;
-    }
-//    Logger.log("adfkjas;dfkajf;");
-    var clusterSize = rowData.size;
-    if(clusterSize < 6){
-      clusterSize++;   
-    //  var columnSize = rowData.indexOf(size);
-    //  Logger.log(columnSize);
-      var sizeCell = clusterSheet.getRange(i+1,8);
-      Logger.log(sizeCell.value);
-      sizeCell.setValue(clusterSize);
-      var roster = rowData.roster;
-      if(roster === undefined){
-        roster = [];
-      }else{
-         roster = roster.split();
-      }
-      roster.push(form.studentName);
-      roster = roster.toString();
-      Logger.log(roster);
-      var rosterCell = clusterSheet.getRange(i+1,9);
-      rosterCell.setValue(roster);      
-      clusterAvailible = true;
-    }else{
-      clusterAvailible = false;
+
+
+  <script  type="text/javascript">
+    
+    
+  //displays dropdown menu of clusters
+   function onSuccessCluster(clusterList) { 
+     var dropdown = document.getElementById("selectCluster");
+    // Loop through the array
+    for (var i = 0; i < clusterList.length; ++i) {
+     //Append the element to the end of Array list
+     dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
+     }     
+   }   
+ 
+ //displays student autocomplete
+ function onSuccessStudents(studentList){ 
+  var dataList = document.getElementById('studentName-datalist');
+  var input = document.getElementById('studentName');    
+    // Loop through the array
+    for (var i = 0; i < studentList.length; ++i) {
+     // Append the element to the end of Array list
+     var option = document.createElement('option');
+      // Set the value using the item in the JSON array.
+      option.value = studentList[i];
+      // Add the <option> element to the <datalist>.
+      dataList.appendChild(option);
     }  
-  }//closes for loop
-return clusterAvailible;
-}
-
-
-//retrieves student's tutoring schedule
-function getTutors(form){
-  var nameBox = form.studentName;
-  for (var i = 1; i < studentObjects.length; ++i) {
-    var rowData = studentObjects[i];
-    var nn = rowData.studentName.indexOf(nameBox);
-    //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
-    if (nn === -1) {
-      continue;
-    }
-      //cleans data
-      rowData.day1 = spellDay(rowData.day1);
-      rowData.day2 = spellDay(rowData.day2);
-      rowData.time1 = extractTime(rowData.time1);
-      rowData.time2 = extractTime(rowData.time2);
-       //compiles tutors
-      var tutor1 = [rowData.t1name, rowData.time1, rowData.day1];
-      var tutor2 = [rowData.t2name, rowData.time2, rowData.day2];
-      tutor1 = tutor1.toString();
-      tutor2 = tutor2.toString();
-      tutor1 = tutor1.replace(/,/g, "");
-      tutor2 = tutor2.replace(/,/g, "");
-     //puts both tutors ino an array
-      var tutorArray = [tutor1, tutor2]; 
-  }//closes for loop
-  return tutorArray;
-}
-
-
-//spells out days of the week.      
-function spellDay(day) {
-  switch (day) {
-    case "-":
-      day = "-";
-      break;
-    case "M":
-      day = "Monday";
-      break;
-    case "T":
-      day = "Tuesday";
-      break;
-    case "W":
-      day = "Wednesday";
-      break;
-    case "R":
-      day = "Thursday";
-      break;
-    case "MW":
-      day = "Monday and Wednesday";
-      break;
-    case "TR":
-      day = "Tuesday and Thursday";
-      break;
-
   }
-  var on = " on ";
-  day = on.concat(day);
-  return day;
-};
-
-
-//function extracts time  
-function extractTime(time) {
-
-  if (time === "-") {
-    time = "-";
-  } else {
-    var hour = time.getHours();
- //   hour = hour - 3;
-    var minute = time.getMinutes();
-    if (minute === 0) {
-      minute = minute.toString();
-      minute = minute.concat("0pm");
-    } else {
-      minute = minute.toString();
-      minute = minute.concat("am");
-    }
-    time = hour.toString().concat(":").concat(minute);
-  };
   
-  var at = " at ";
-  time = at.concat(time);
-  return time;
-};
+  //Asks the user if their email is correct
+  function onSuccessEmail(studentEmail){
 
-
-function tutorDrop(tutorDrop){
-  Logger.log("I got clicked");
+   var div = document.getElementById("studentEmail");
+   div.innerHTML =  "Is this your email? " +studentEmail;
+   
+   var spinner = document.getElementById("spinner");
+   spinner.setAttribute("hidden", "hidden");
+   
+   var radio = document.getElementById("radioEmail");
+   radio.removeAttribute("hidden");
+ }
+ 
+ //determines whether cluster is availible and calls tutor drop function
+ function onSuccessSize(clusterAvailible){
+    var clusterVer = document.getElementById("clusterVerification");
+    clusterVer.removeAttribute("hidden");
+     if(clusterAvailible === true){
+    
+        clusterVer.innerHTML =  "Great! Which tutor would you like to drop?";
+        google.script.run.withSuccessHandler(onSuccessGetTutor).getTutors(document.forms[0]);
+    
+    }else{
+      var clusterVer = document.getElementById("clusterVerification");
+      clusterVer.removeAttribute("hidden");
+      clusterVer.innerHTML =  "I'm sorry but the cluster you've selected is full. Please select another cluster.";
+   }
+ }
+ 
+//asks students which tutor they want to drop 
+ function onSuccessGetTutor(tutorArray){
+  // var studentName = document.getElementById("studentName");
+  // studentName.setAttribute("hidden", "hidden");
+   
+  // var clusterSignUp = document.getElementById("clusterSignUp");
+  // clusterSignUp.setAttribute("hidden", "hidden");
+ 
+  // if(tutorArray[0].indexOf("-") === 0){
+    //    console.log(tutorArray[1].indexOf("-")); 
+  // }
   
+   var tutorDrop = document.getElementById("tutorDrop");
+      tutorDrop.removeAttribute("hidden");
+  
+     var tutorDropdown = document.getElementById("selectTutor");
+    // Loop through the array
+    for (var i = 0; i < tutorArray.length; ++i) {
+     //Append the element to the end of Array list
+     tutorDropdown[tutorDropdown.length] = new Option(tutorArray[i], tutorArray[i]);
+     }
+ 
+ }
+ 
+ function onSuccessTutorDrop(){
+ console.log("I got clicked");
+ }
+ 
+ //displays results of level check and calls cluster availibility function
+ function onSuccessLevel(levelVer){
+ 
+   var spinner = document.getElementById("spinner");
+   spinner.setAttribute("hidden", "hidden");
+   
+   var radio = document.getElementById("radioEmail");
+   radio.setAttribute("hidden", "hidden");
+   
+   if(levelVer === true){
+   google.script.run.withSuccessHandler(onSuccessSize).checkAvailibility(document.forms[0]);
+   }else{
+   console.log("Bummer!");
+    var clusterVer = document.getElementById("clusterVerification");
+    clusterVer.removeAttribute("hidden");
+    clusterVer.innerHTML =  "I'm sorry but you are not the right level for this cluster. Please select another cluster.";
+   } 
+ }
+ 
+ //retrieves student and cluster lists
+ google.script.run.withSuccessHandler(onSuccessCluster).getClusterList();
+ google.script.run.withSuccessHandler(onSuccessStudents).autoComplete();
+
+//runs when student submits their name and calls the get Email function
+ function formSubmitName(event) {
+  if (event) {
+    event.preventDefault();
   }
+  
+  var spinner = document.getElementById("spinner");
+  spinner.removeAttribute("hidden");
+  google.script.run.withSuccessHandler(onSuccessEmail).getStudentEmail(document.forms[0]);
+}
 
-
-
-
-function numberLevel(level) {
-  switch (level) {
-    case "Pre-I A":
-      level = "0";
-      break;
-    case "I":
-      level = "1";
-      break;
-   case "II":
-      level = "2";
-      break;
-   case "III":
-      level = "3";
-      break;   
-   case "IV":
-      level = "4";
-      break;  
-   case "V":
-      level = "5";
-      break;
-   case "VI":
-      level = "5";
-      break;
+//runs when students submit their email and pulls up cluster list
+function formSubmitEmail(event) {
+  if (event) {
+    event.preventDefault();
   }
-  return level;
-};
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-// The code below is reused from the 'Reading Spreadsheet data using JavaScript Objects'
-// tutorial.
-//
-//////////////////////////////////////////////////////////////////////////////////////////
-
-// getRowsData iterates row by row in the input range and returns an array of objects.
-// Each object contains all the data for a given row, indexed by its normalized column name.
-// Arguments:
-//   - sheet: the sheet object that contains the data to be processed
-//   - range: the exact range of cells where the data is stored
-//   - columnHeadersRowIndex: specifies the row number where the column names are stored.
-//       This argument is optional and it defaults to the row immediately above range; 
-// Returns an Array of objects.
-function getRowsData(sheet, range, columnHeadersRowIndex) {
-  columnHeadersRowIndex = columnHeadersRowIndex || range.getRowIndex() - 1;
-  var numColumns = range.getEndColumn() - range.getColumn() + 1;
-  //Logger.log(numColumns);
-  var headersRange = sheet.getRange(1, 1, 1, sheet.getMaxColumns());
-  var headers = headersRange.getValues()[0];
-  return getObjects(range.getValues(), normalizeHeaders(headers));
-}
-
-// For every row of data in data, generates an object that contains the data. Names of
-// object fields are defined in keys.
-// Arguments:
-//   - data: JavaScript 2d array
-//   - keys: Array of Strings that define the property names for the objects to create
-function getObjects(data, keys) {
-  var objects = [];
-  for (var i = 0; i < data.length; ++i) {
-    var object = {};
-    var hasData = false;
-    for (var j = 0; j < data[i].length; ++j) {
-      var cellData = data[i][j];
-      if (isCellEmpty(cellData)) {
-        continue;
-      }
-      object[keys[j]] = cellData;
-      hasData = true;
+  
+    var studentEmail = document.getElementById("studentEmail");
+     studentEmail.setAttribute("hidden", "hidden");
+     
+     var radio = document.getElementById("radioEmail");
+     radio.setAttribute("hidden", "hidden");
+    var radioValue = document.querySelector('input[name = "email"]:checked').value;
+     
+     if(radioValue === "yes"){
+        var clusterSignUp = document.getElementById("clusterSignUp");
+        clusterSignUp.removeAttribute("hidden");
     }
-    if (hasData) {
-      objects.push(object);
-    }
+    if(radioValue === "no"){
+       var div = document.createElement('div');
+       document.body.appendChild(div);  
+       div.innerHTML =  "Sorry that wasn't you! Please write your name in again!";
+   }
+ }
+
+//runs when cluster is submitted and calls the check level function
+ function formSubmitCluster(event) {
+  if (event) {
+    event.preventDefault();
+   }
+  
+  var spinner = document.getElementById("spinner");
+  spinner.removeAttribute("hidden");
+  
+  var radio = document.getElementById("radioEmail");
+  radio.setAttribute("hidden", "hidden");
+   
+  var studentEmail = document.getElementById("studentEmail");
+  studentEmail.setAttribute("hidden", "hidden");
+  
+  google.script.run.withSuccessHandler(onSuccessLevel).checkLevel(document.forms[0]);
+ }
+
+
+function formSubmitTutorDrop(event){
+  if (event) {
+    event.preventDefault();
   }
-  return objects;
+    google.script.run.withSuccessHandler(onSuccessTutorDrop).tutorDrop(document.forms[0]);
+
+
 }
 
-// Returns an Array of normalized Strings.
-// Arguments:
-//   - headers: Array of Strings to normalize
-function normalizeHeaders(headers) {
-  var keys = [];
-  for (var i = 0; i < headers.length; ++i) {
-    var key = normalizeHeader(headers[i]);
-    if (key.length > 0) {
-      keys.push(key);
-    }
-  }
-  return keys;
-}
 
-// Normalizes a string, by removing all alphanumeric characters and using mixed case
-// to separate words. The output will always start with a lower case letter.
-// This function is designed to produce JavaScript object property names.
-// Arguments:
-//   - header: string to normalize
-// Examples:
-//   "First Name" -> "firstName"
-//   "Market Cap (millions) -> "marketCapMillions
-//   "1 number at the beginning is ignored" -> "numberAtTheBeginningIsIgnored"
-function normalizeHeader(header) {
-  var key = "";
-  var upperCase = false;
-  for (var i = 0; i < header.length; ++i) {
-    var letter = header[i];
-    if (letter == " " && key.length > 0) {
-      upperCase = true;
-      continue;
-    }
-    if (!isAlnum(letter)) {
-      continue;
-    }
-    if (key.length == 0 && isDigit(letter)) {
-      continue; // first character must be a letter
-    }
-    if (upperCase) {
-      upperCase = false;
-      key += letter.toUpperCase();
-    } else {
-      key += letter.toLowerCase();
-    }
-  }
-  return key;
-}
 
-// Returns true if the cell where cellData was read from is empty.
-// Arguments:
-//   - cellData: string
-function isCellEmpty(cellData) {
-  return typeof(cellData) == "string" && cellData == "";
-}
 
-// Returns true if the character char is alphabetical, false otherwise.
-function isAlnum(char) {
-  return char >= 'A' && char <= 'Z' ||
-    char >= 'a' && char <= 'z' ||
-    isDigit(char);
-}
 
-// Returns true if the character char is a digit, false otherwise.
-function isDigit(char) {
-  return char >= '0' && char <= '9';
-}
+  </script>
+
+</body>
+</html>
+
+
+

@@ -39,22 +39,24 @@
     
   <div id = "clusterVerification" hidden= "hidden">
   </div>
-      
-  </form>
-
-  <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
-
+   
 <div id="tutorDrop" hidden= "hidden">
+  <br>
        <select id="selectTutor" name ="selectTutor" >
         <option value="" disabled selected>Please select a tutor</option> 
-        <br>
-        <br>
       </select>
       <input type="submit" onClick="formSubmitTutorDrop(event)" value = "Submit"/> <p>
   </div> 
 
 
 
+  
+
+
+
+  </form>
+
+  <img src="http://app.lingsync.org/images/loading-spinner.gif" width="20" hidden=hidden id ="spinner" />
 
 
 
@@ -131,11 +133,11 @@
    var tutorDrop = document.getElementById("tutorDrop");
       tutorDrop.removeAttribute("hidden");
   
-     var dropdown = document.getElementById("selectTutor");
+     var tutorDropdown = document.getElementById("selectTutor");
     // Loop through the array
     for (var i = 0; i < tutorArray.length; ++i) {
      //Append the element to the end of Array list
-     dropdown[dropdown.length] = new Option(tutorArray[i], tutorArray[i]);
+     tutorDropdown[tutorDropdown.length] = new Option(tutorArray[i], tutorArray[i]);
      }
  
  }
@@ -222,6 +224,9 @@ function formSubmitEmail(event) {
 
 
 function formSubmitTutorDrop(event){
+  if (event) {
+    event.preventDefault();
+  }
     google.script.run.withSuccessHandler(onSuccessTutorDrop).tutorDrop(document.forms[0]);
 
 
