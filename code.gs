@@ -191,7 +191,6 @@ function tutorDrop(form){
       var clusterName = rowDataCluster.clusterName + " "+ rowDataCluster.time;
       var clusterNN =  clusterName.indexOf(clusterBox);
            
-     //       Logger.log(clusterNN);
 
        if (clusterNN === -1) {
         continue;
@@ -200,21 +199,11 @@ function tutorDrop(form){
       var clusterTimeAndDay = rowDataCluster.time.split(" ");
       var clusterTime = clusterTimeAndDay[1];
       var clusterDay = clusterTimeAndDay[0];
-      var clusterLocation =  rowDataCluster.location;
-      var clusterInstructor = rowDataCluster.instructor;
+  //    var clusterLocation =  rowDataCluster.location;
+   //   var clusterInstructor = rowDataCluster.instructor;
       
       }
       
-
-        
- 
- 
- 
- 
- 
- 
- 
-
   for (var i = 1; i < studentObjects.length; ++i) {
       var rowData = studentObjects[i];
         
@@ -236,7 +225,19 @@ function tutorDrop(form){
         if (mm === -1) {
           continue;
         }
-      
+       var tutorCell = studentSheet.getRange(i+1,k+1);
+       tutorCell.setValue(clusterCode);
+             tutorCell.setBackground("#846591");
+
+       var dayCell = studentSheet.getRange(i+1,k+2);
+       dayCell.setValue(clusterDay);
+       dayCell.setBackground("#846591");
+
+       var timeCell = studentSheet.getRange(i+1,k+3);
+       timeCell.setValue(clusterTime);
+       timeCell.setBackground("#846591");
+
+        
       
       
       }
