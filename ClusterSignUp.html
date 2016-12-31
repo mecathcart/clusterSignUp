@@ -48,7 +48,8 @@
       <input type="submit" onClick="formSubmitTutorDrop(event)" value = "Submit"/> <p>
   </div> 
 
-
+<div id="thankYou">
+</div>
 
   
 
@@ -227,6 +228,24 @@ function formSubmitTutorDrop(event){
   if (event) {
     event.preventDefault();
   }
+  
+   var studentName = document.getElementById("studentName");
+   studentName.setAttribute("hidden", "hidden");
+   
+   var clusterSignUp = document.getElementById("clusterSignUp");
+   clusterSignUp.setAttribute("hidden", "hidden");
+   
+    var tutorDrop = document.getElementById("tutorDrop");
+    tutorDrop.setAttribute("hidden", "hidden");
+    
+     var clusterVer = document.getElementById("clusterVerification");
+     clusterVer.setAttribute("hidden", "hidden");
+   
+   var thankYou = document.getElementById("thankYou");
+   thankYou.innerHTML =  "Thank you for signing up for a cluster.  You will receive an email confirmation with your new schedule shortly.";
+
+   
+   
     google.script.run.withSuccessHandler(onSuccessTutorDrop).tutorDrop(document.forms[0]);
 
 
