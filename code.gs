@@ -179,9 +179,41 @@ function tutorDrop(form){
 
   var studentBox = form.studentName;
   var clusterBox = form.clusterName;
+//  clusterBox = clusterBox.split(" ");
+   //   clusterBox = normalizeHeaders(clusterBox);
+
+ // var clusterBoxName = clusterBox[0];
   
   
-  
+ 
+  for (var j = 1; j < clusterObjects.length; ++j) {
+      var rowDataCluster = clusterObjects[j];
+      var clusterName = rowDataCluster.clusterName + " "+ rowDataCluster.time;
+      var clusterNN =  clusterName.indexOf(clusterBox);
+           
+     //       Logger.log(clusterNN);
+
+       if (clusterNN === -1) {
+        continue;
+      }
+      var clusterCode = rowDataCluster.code;
+      var clusterTimeAndDay = rowDataCluster.time.split(" ");
+      var clusterTime = clusterTimeAndDay[1];
+      var clusterDay = clusterTimeAndDay[0];
+      var clusterLocation =  rowDataCluster.location;
+      var clusterInstructor = rowDataCluster.instructor;
+      
+      }
+      
+
+        
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
   for (var i = 1; i < studentObjects.length; ++i) {
       var rowData = studentObjects[i];
@@ -192,8 +224,22 @@ function tutorDrop(form){
           continue;
         }
       
-    var tutor = searchObj(rowData,tutorBoxCode);
-    Logger.log("tutor is " + tutor);
+       var tutor = searchObj(rowData,tutorBoxCode);
+
+       var headerRow = studentSheet.getRange("A1:N1").getValues();
+       headerRow[0] = normalizeHeaders(headerRow[0]);
+        // Logger.log(headerRow[0][1]);
+        
+      for(var k=1; k < headerRow[0].length; k++){
+         var mm = headerRow[0][k].indexOf(tutor);
+      //  Logger.log("mm is "+ mm);
+        if (mm === -1) {
+          continue;
+        }
+      
+      
+      
+      }
       
       
       
@@ -210,21 +256,7 @@ function tutorDrop(form){
      
        
      }  
-        //loops through clusters
-    for (var i = 1; i < clusterObjects.length; ++i) {
-      var rowDataCluster = clusterObjects[i];
-      var clusterNN = rowDataCluster.clusterName.indexOf(clusterBox);
-       if (clusterNN === -1) {
-        continue;
-      }
-      var clusterCode = rowDataCluster.code;
-      var clusterTimeAndDay = rowDataCluster.time.split(" ");
-      var clusterTime = clusterTimeAndDay[1];
-      var clusterDay = clusterTimeAndDay[0];
-      Logger.log(clusterTime) 
-      var clusterLocation =  rowDataCluster.location;
-      
-      }
+   
 
   };
 
