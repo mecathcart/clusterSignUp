@@ -39,6 +39,8 @@ function autoComplete() {
     var rowData = studentObjects[i];
     studentList[i] = rowData.studentName;
   }
+  clusterList.shift();
+
   return studentList;
 }
 
@@ -169,7 +171,7 @@ function getTutors(form){
 }
 
 
-
+//updates the schedule
 function tutorDrop(form){
   var tutorBox = form.selectTutor;
   tutorBox = tutorBox.split(" ");
@@ -190,8 +192,7 @@ function tutorDrop(form){
       var rowDataCluster = clusterObjects[j];
       var clusterName = rowDataCluster.clusterName + " "+ rowDataCluster.time;
       var clusterNN =  clusterName.indexOf(clusterBox);
-           
-
+          
        if (clusterNN === -1) {
         continue;
       }
@@ -199,8 +200,8 @@ function tutorDrop(form){
       var clusterTimeAndDay = rowDataCluster.time.split(" ");
       var clusterTime = clusterTimeAndDay[1];
       var clusterDay = clusterTimeAndDay[0];
-  //    var clusterLocation =  rowDataCluster.location;
-   //   var clusterInstructor = rowDataCluster.instructor;
+      var clusterLocation =  rowDataCluster.location;
+      var clusterInstructor = rowDataCluster.instructor;
       
       }
       
@@ -214,20 +215,42 @@ function tutorDrop(form){
         }
       
        var tutor = searchObj(rowData,tutorBoxCode);
+       
 
        var headerRow = studentSheet.getRange("A1:N1").getValues();
        headerRow[0] = normalizeHeaders(headerRow[0]);
-        // Logger.log(headerRow[0][1]);
         
       for(var k=1; k < headerRow[0].length; k++){
          var mm = headerRow[0][k].indexOf(tutor);
       //  Logger.log("mm is "+ mm);
-        if (mm === -1) {
+       
+       if (mm === -1) {
           continue;
         }
+         
+       if(k === 1){
+         rowData.tutor1 = clusterCode;
+         rowData.day1 = clusterDay;
+         rowData.time1 = clusterTime;
+         rowData.t1room = clusterLocation;
+         rowData.t1name = clusterInstructor;
+       
+       }
+       
+       
+       if(k === 4){
+       
+         rowData.tutor2 = clusterCode;
+         rowData.day2 = clusterDay;
+         rowData.time2 = clusterTime;
+         rowData.t2room = clusterLocation;
+         rowData.t2name = clusterInstructor;
+       
+       }
+         
        var tutorCell = studentSheet.getRange(i+1,k+1);
        tutorCell.setValue(clusterCode);
-             tutorCell.setBackground("#846591");
+       tutorCell.setBackground("#846591");
 
        var dayCell = studentSheet.getRange(i+1,k+2);
        dayCell.setValue(clusterDay);
@@ -236,34 +259,47 @@ function tutorDrop(form){
        var timeCell = studentSheet.getRange(i+1,k+3);
        timeCell.setValue(clusterTime);
        timeCell.setBackground("#846591");
-
-        
-      
-      
-      }
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-     
        
-     }  
+  
+      }//ends header row loop
+      
+        //send email confirmation
+       var templateSheet = ss.getSheets()[2];
+       var emailTemplate = templateSheet.getRange("A1").getValue();
+       var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+       var emailSubject = "Thank you for signing up for a cluster";
+       
+        MailApp.sendEmail("mdotedot@udel.edu", emailSubject, emailText); 
+       
+     }//ends student loop
    
+ 
 
-  };
+   
+  };// ends tutorDrop Function
 
 
   
- 
+ // Replaces markers in a template string with values define in a JavaScript data object.
+// Arguments:
+//   - template: string containing markers, for instance ${"Column name"}
+//   - data: JavaScript object with values to that will replace markers. For instance
+//           data.columnName will replace marker ${"Column name"}
+// Returns a string without markers. If no data is found to replace a marker, it is
+// simply removed.
+function fillInTemplateFromObject(template, data) {
+  var email = template;
+  // Search for all the variables to be replaced, for instance ${"Column name"}
+  var templateVars = template.match(/\$\{\"[^\"]+\"\}/g);
+  // Replace variables from the template with the actual values from the data object.
+  // If no value is available, replace with the empty string.
+  for (var i = 0; i < templateVars.length; ++i) {
+    // normalizeHeader ignores ${"} so we can call it directly here.
+    var variableData = data[normalizeHeader(templateVars[i])];
+    email = email.replace(templateVars[i], variableData || "");
+  }
+  return email;
+}
 
 
 
