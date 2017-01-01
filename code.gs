@@ -202,7 +202,7 @@ function tutorDrop(form){
       var clusterDay = clusterTimeAndDay[0];
       var clusterLocation =  rowDataCluster.location;
       var clusterInstructor = rowDataCluster.instructor;
-      
+            
       }
       
   for (var i = 1; i < studentObjects.length; ++i) {
@@ -228,26 +228,7 @@ function tutorDrop(form){
           continue;
         }
          
-       if(k === 1){
-         rowData.tutor1 = clusterCode;
-         rowData.day1 = clusterDay;
-         rowData.time1 = clusterTime;
-         rowData.t1room = clusterLocation;
-         rowData.t1name = clusterInstructor;
-       
-       }
-       
-       
-       if(k === 4){
-       
-         rowData.tutor2 = clusterCode;
-         rowData.day2 = clusterDay;
-         rowData.time2 = clusterTime;
-         rowData.t2room = clusterLocation;
-         rowData.t2name = clusterInstructor;
-       
-       }
-         
+       //write new schedule to excel sheet  
        var tutorCell = studentSheet.getRange(i+1,k+1);
        tutorCell.setValue(clusterCode);
        tutorCell.setBackground("#846591");
@@ -260,9 +241,54 @@ function tutorDrop(form){
        timeCell.setValue(clusterTime);
        timeCell.setBackground("#846591");
        
-  
+       //get data for template
+        if(k === 1){
+         rowData.tutor1 = clusterCode;
+         rowData.day1 = clusterDay;
+         rowData.time1 = clusterTime;
+         rowData.t1room = clusterLocation;
+         rowData.t1name = clusterInstructor;
+         
+         rowData.time2 = extractTime(rowData.time2);
+         
+         var roomCell = studentSheet.getRange(i+1,k+7);
+         roomCell.setValue(clusterLocation);
+         roomCell.setBackground("#846591");
+         
+         var instructorCell = studentSheet.getRange(i+1,k+9);
+         instructorCell.setValue(clusterInstructor);
+         instructorCell.setBackground("#846591");
+
+       }
+       
+       
+       if(k === 4){
+       
+         rowData.tutor2 = clusterCode;
+         rowData.day2 = clusterDay;
+         rowData.time2 = clusterTime;
+         rowData.t2room = clusterLocation;
+         rowData.t2name = clusterInstructor;
+         
+         rowData.time1 = extractTime(rowData.time1);
+           
+         var roomCell = studentSheet.getRange(i+1,k+5);
+         roomCell.setValue(clusterLocation);
+         roomCell.setBackground("#846591");
+         
+         var instructorCell = studentSheet.getRange(i+1,k+7);
+         instructorCell.setValue(clusterInstructor);
+         instructorCell.setBackground("#846591");
+              
+       }
+        
       }//ends header row loop
       
+      
+      rowData.day1 = spellDay(rowData.day1);
+      rowData.day2 = spellDay(rowData.day2);
+
+      rowData.studentName = firstNameFirst(rowData.studentName);
         //send email confirmation
        var templateSheet = ss.getSheets()[2];
        var emailTemplate = templateSheet.getRange("A1").getValue();
@@ -307,7 +333,10 @@ function fillInTemplateFromObject(template, data) {
 
 
 
-
+function firstNameFirst(studentName) {
+  studentName = studentName.split(",").reverse().toString().replace(",", " ");
+  return studentName;
+};
 
 
 
@@ -340,8 +369,7 @@ function spellDay(day) {
       break;
 
   }
-  var on = " on ";
-  day = on.concat(day);
+ 
   return day;
 };
 
