@@ -27,6 +27,8 @@
       <input type="radio" name="email" id = "radioNo" value="no"> no<br>
       <input type="submit" onClick="formSubmitEmail(event)" value = "Submit"/> <p>
   </div>  
+  
+  <div id ="notYou"></div>
     
     
   <div id = "clusterSignUp" hidden= "hidden">
@@ -115,7 +117,7 @@
     }else{
       var clusterVer = document.getElementById("clusterVerification");
       clusterVer.removeAttribute("hidden");
-      clusterVer.innerHTML =  "I'm sorry but the cluster you've selected is full. Please select another cluster.";
+      clusterVer.innerHTML =  "I'm sorry, but the cluster you've selected is full. Please select another cluster.";
    }
  }
  
@@ -162,7 +164,7 @@
    console.log("Bummer!");
     var clusterVer = document.getElementById("clusterVerification");
     clusterVer.removeAttribute("hidden");
-    clusterVer.innerHTML =  "I'm sorry but you are not the right level for this cluster. Please select another cluster.";
+    clusterVer.innerHTML =  "I'm sorry, but you are not the right level for this cluster. Please select another cluster.";
    } 
  }
  
@@ -178,6 +180,11 @@
   
   var spinner = document.getElementById("spinner");
   spinner.removeAttribute("hidden");
+  
+  var notYou = document.getElementById("notYou");
+  notYou.setAttribute("hidden", "hidden");
+
+
   google.script.run.withSuccessHandler(onSuccessEmail).getStudentEmail(document.forms[0]);
 }
 
@@ -199,9 +206,10 @@ function formSubmitEmail(event) {
         clusterSignUp.removeAttribute("hidden");
     }
     if(radioValue === "no"){
-       var div = document.createElement('div');
-       document.body.appendChild(div);  
-       div.innerHTML =  "Sorry that wasn't you! Please write your name in again!";
+    
+       var notYou = document.getElementById("notYou");
+       notYou.removeAttribute("hidden");
+       notYou.innerHTML =  "Sorry that wasn't you! Please write your name in again!";
    }
  }
 

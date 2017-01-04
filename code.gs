@@ -63,6 +63,7 @@ function getStudentEmail(form) {
 
 //checks the level of student and sees whether the students are eligible for the cluster they want to take
 function checkLevel(form){
+Logger.log("I'm checking level");
   var clusterBox = form.clusterName;
   clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
   var nameBox = form.studentName.toString();
@@ -117,7 +118,7 @@ var clusterAvailible = false;
       continue;
     }
     var clusterSize = rowData.size;
-    if(clusterSize < 6){
+    if(clusterSize < rowData.maxSize){
       clusterSize++;   
     //  var columnSize = rowData.indexOf(size);
     //  Logger.log(columnSize);
@@ -196,7 +197,8 @@ function tutorDrop(form){
        if (clusterNN === -1) {
         continue;
       }
-      var clusterCode = rowDataCluster.code;
+      var clusterCode = rowDataCluster.clusterCode;
+      var clusterNameTemplate = rowDataCluster.clusterName;
       var clusterTimeAndDay = rowDataCluster.time.split(" ");
       var clusterTime = clusterTimeAndDay[1];
       var clusterDay = clusterTimeAndDay[0];
@@ -243,7 +245,7 @@ function tutorDrop(form){
        
        //get data for template
         if(k === 1){
-         rowData.tutor1 = clusterCode;
+         rowData.tutor1 = clusterNameTemplate;
          rowData.day1 = clusterDay;
          rowData.time1 = clusterTime;
          rowData.t1room = clusterLocation;
@@ -264,7 +266,7 @@ function tutorDrop(form){
        
        if(k === 4){
        
-         rowData.tutor2 = clusterCode;
+         rowData.tutor2 = clusterNameTemplate;
          rowData.day2 = clusterDay;
          rowData.time2 = clusterTime;
          rowData.t2room = clusterLocation;
@@ -295,7 +297,7 @@ function tutorDrop(form){
        var emailText = fillInTemplateFromObject(emailTemplate, rowData);
        var emailSubject = "Thank you for signing up for a cluster";
        
-        MailApp.sendEmail("mdotedot@udel.edu", emailSubject, emailText); 
+        MailApp.sendEmail("mdotedot@udel.edu", emailSubject, emailText, { name: "Ken Hyde",replyTo: "kenny@udel.edu" }); 
        
      }//ends student loop
    
@@ -397,10 +399,6 @@ function extractTime(time) {
   time = at.concat(time);
   return time;
 };
-
-
-
-
 
 
 
