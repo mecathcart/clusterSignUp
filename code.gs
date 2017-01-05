@@ -7,8 +7,8 @@ function doGet() {
 
 
 //identifies spreadsheet
-var ss = SpreadsheetApp.openById('1TqcXN0mufW1KlRP8NeJuQVOE-ZPZHxAfhPM5WxwuZgY');
-var clusterSheet = ss.getSheets()[1];
+var ss = SpreadsheetApp.openById('13P5ffRAQLKknSffgaENe_HXliSwHFXPho-PvXgmgN84');
+var clusterSheet = ss.getSheets()[3];
 var studentSheet = ss.getSheets()[0];
 
 //for the dropdown lists and autocomplete
@@ -39,7 +39,7 @@ function autoComplete() {
     var rowData = studentObjects[i];
     studentList[i] = rowData.studentName;
   }
-  clusterList.shift();
+  studentList.shift();
 
   return studentList;
 }
@@ -63,7 +63,6 @@ function getStudentEmail(form) {
 
 //checks the level of student and sees whether the students are eligible for the cluster they want to take
 function checkLevel(form){
-Logger.log("I'm checking level");
   var clusterBox = form.clusterName;
   clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
   var nameBox = form.studentName.toString();
@@ -82,6 +81,10 @@ Logger.log("I'm checking level");
     //converts levels into numbers
      lsLevel = numberLevel(lsLevel);
      rwLevel = numberLevel(rwLevel);   
+  
+  }//closes student loop
+  
+  
     //loops through clusters
     for (var i = 1; i < clusterObjects.length; ++i) {
       var rowDataCluster = clusterObjects[i];
@@ -99,7 +102,6 @@ Logger.log("I'm checking level");
       levelVer = false;
       }//closes if clause
     }//closes cluster loop
-  }//closes student loop
   return levelVer;
 }
 
@@ -197,7 +199,7 @@ function tutorDrop(form){
        if (clusterNN === -1) {
         continue;
       }
-      var clusterCode = rowDataCluster.clusterCode;
+      var clusterCode = rowDataCluster.code;
       var clusterNameTemplate = rowDataCluster.clusterName;
       var clusterTimeAndDay = rowDataCluster.time.split(" ");
       var clusterTime = clusterTimeAndDay[1];
@@ -232,6 +234,7 @@ function tutorDrop(form){
          
        //write new schedule to excel sheet  
        var tutorCell = studentSheet.getRange(i+1,k+1);
+       Logger.log(clusterCode);
        tutorCell.setValue(clusterCode);
        tutorCell.setBackground("#846591");
 
@@ -292,13 +295,13 @@ function tutorDrop(form){
 
       rowData.studentName = firstNameFirst(rowData.studentName);
         //send email confirmation
-       var templateSheet = ss.getSheets()[2];
+       var templateSheet = ss.getSheets()[4];
        var emailTemplate = templateSheet.getRange("A1").getValue();
        var emailText = fillInTemplateFromObject(emailTemplate, rowData);
        var emailSubject = "Thank you for signing up for a cluster";
        
         MailApp.sendEmail("mdotedot@udel.edu", emailSubject, emailText, { name: "Ken Hyde",replyTo: "kenny@udel.edu" }); 
-       
+       Logger.log("I should be sending email");
      }//ends student loop
    
  
