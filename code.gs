@@ -7,9 +7,9 @@ function doGet() {
 
 
 //identifies spreadsheet
-var ss = SpreadsheetApp.openById('13P5ffRAQLKknSffgaENe_HXliSwHFXPho-PvXgmgN84');
-var clusterSheet = ss.getSheets()[3];
-var studentSheet = ss.getSheets()[0];
+var ss = SpreadsheetApp.openById('1TqcXN0mufW1KlRP8NeJuQVOE-ZPZHxAfhPM5WxwuZgY');
+var clusterSheet = ss.getSheets()[2];
+var studentSheet = ss.getSheets()[4];
 
 //for the dropdown lists and autocomplete
 var clusterList = [];
@@ -80,7 +80,8 @@ function checkLevel(form){
     var rwLevel = rowData.rwLevel;   
     //converts levels into numbers
      lsLevel = numberLevel(lsLevel);
-     rwLevel = numberLevel(rwLevel);   
+     rwLevel = numberLevel(rwLevel);
+     Logger.log(lsLevel);
   
   }//closes student loop
   
@@ -300,8 +301,9 @@ function tutorDrop(form){
        var emailText = fillInTemplateFromObject(emailTemplate, rowData);
        var emailSubject = "Thank you for signing up for a cluster";
        
-        MailApp.sendEmail("mdotedot@udel.edu", emailSubject, emailText, { name: "Ken Hyde",replyTo: "kenny@udel.edu" }); 
-       Logger.log("I should be sending email");
+       // MailApp.sendEmail(rowData.email, emailSubject, emailText, { name: "Ken Hyde",replyTo: "kenny@udel.edu" }); 
+          MailApp.sendEmail("mdotedot@udel.edu", emailSubject, emailText, { name: "Ken Hyde",replyTo: "kenny@udel.edu" }); 
+
      }//ends student loop
    
  
@@ -386,7 +388,7 @@ function extractTime(time) {
     time = "-";
   } else {
     var hour = time.getHours();
- //   hour = hour - 3;
+    hour = hour - 3;
     var minute = time.getMinutes();
     if (minute === 0) {
       minute = minute.toString();

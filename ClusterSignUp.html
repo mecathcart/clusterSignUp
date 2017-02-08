@@ -251,7 +251,6 @@ function formSubmitTutorDrop(event){
    
    var thankYou = document.getElementById("thankYou");
    thankYou.innerHTML =  "Thank you for signing up for a cluster.  You will receive an email confirmation with your new schedule shortly.";
-
    
    
     google.script.run.withSuccessHandler(onSuccessTutorDrop).tutorDrop(document.forms[0]);
