@@ -81,7 +81,7 @@ function checkLevel(form){
     //converts levels into numbers
      lsLevel = numberLevel(lsLevel);
      rwLevel = numberLevel(rwLevel);
-     Logger.log(lsLevel);
+  //   Logger.log(lsLevel);
   
   }//closes student loop
   
@@ -191,7 +191,6 @@ function tutorDrop(form){
  // var clusterBoxName = clusterBox[0];
   
   
- 
   for (var j = 1; j < clusterObjects.length; ++j) {
       var rowDataCluster = clusterObjects[j];
       var clusterName = rowDataCluster.clusterName + " "+ rowDataCluster.time;
@@ -235,7 +234,7 @@ function tutorDrop(form){
          
        //write new schedule to excel sheet  
        var tutorCell = studentSheet.getRange(i+1,k+1);
-       Logger.log(clusterCode);
+  //     Logger.log(clusterCode);
        tutorCell.setValue(clusterCode);
        tutorCell.setBackground("#846591");
 
@@ -296,8 +295,9 @@ function tutorDrop(form){
 
       rowData.studentName = firstNameFirst(rowData.studentName);
         //send email confirmation
-       var templateSheet = ss.getSheets()[4];
+       var templateSheet = ss.getSheetByName("Cluster Email Template");
        var emailTemplate = templateSheet.getRange("A1").getValue();
+     //  Logger.log("The email template is"+emailTemplate);
        var emailText = fillInTemplateFromObject(emailTemplate, rowData);
        var emailSubject = "Thank you for signing up for a cluster";
        
@@ -445,7 +445,7 @@ function searchObj (obj, query) {
         }
 
         if (value === query) {
-            Logger.log('property=' + key + ' value=' + value);
+       //     Logger.log('property=' + key + ' value=' + value);
               return key;
 
         }

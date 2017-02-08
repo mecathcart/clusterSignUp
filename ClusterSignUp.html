@@ -96,6 +96,7 @@
   function onSuccessEmail(studentEmail){
 
    var div = document.getElementById("studentEmail");
+   div.removeAttribute("hidden");
    div.innerHTML =  "Is this your email? " +studentEmail;
    
    var spinner = document.getElementById("spinner");
