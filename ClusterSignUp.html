@@ -79,6 +79,7 @@
  
  //displays student autocomplete
  function onSuccessStudents(studentList){ 
+ 
   var dataList = document.getElementById('studentName-datalist');
   var input = document.getElementById('studentName');    
     // Loop through the array
@@ -124,16 +125,7 @@
  
 //asks students which tutor they want to drop 
  function onSuccessGetTutor(tutorArray){
-  // var studentName = document.getElementById("studentName");
-  // studentName.setAttribute("hidden", "hidden");
-   
-  // var clusterSignUp = document.getElementById("clusterSignUp");
-  // clusterSignUp.setAttribute("hidden", "hidden");
- 
-  // if(tutorArray[0].indexOf("-") === 0){
-    //    console.log(tutorArray[1].indexOf("-")); 
-  // }
-  
+
    var tutorDrop = document.getElementById("tutorDrop");
       tutorDrop.removeAttribute("hidden");
   
@@ -170,7 +162,7 @@
  }
  
  //retrieves student and cluster lists
- google.script.run.withSuccessHandler(onSuccessCluster).getClusterList();
+// google.script.run.getLevels(document.forms[0]);
  google.script.run.withSuccessHandler(onSuccessStudents).autoComplete();
 
 //runs when student submits their name and calls the get Email function
@@ -205,6 +197,10 @@ function formSubmitEmail(event) {
      if(radioValue === "yes"){
         var clusterSignUp = document.getElementById("clusterSignUp");
         clusterSignUp.removeAttribute("hidden");
+         google.script.run.withSuccessHandler(onSuccessCluster).getClusterList(document.forms[0]);
+
+        // google.script.run.getLevels(document.forms[0]);
+
     }
     if(radioValue === "no"){
     

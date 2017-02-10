@@ -22,14 +22,63 @@ var clusterObjects = getRowsData(clusterSheet, clusterSheetRange);
 var studentSheetRange = studentSheet.getRange(1, 1, studentSheet.getMaxRows(), studentSheet.getMaxColumns());
 var studentObjects = getRowsData(studentSheet, studentSheetRange);
 
+
+function getLevels(form){
+    var nameBox = form.studentName.toString();
+    Logger.log("I am student name" +nameBox);
+}
+
+
+// getLevels();
+ 
 //retrieves the list of clusters
-function getClusterList() {
+function getClusterList(form) {
+  var nameBox = form.studentName.toString();
+  Logger.log(nameBox);
+ 
+  //loops through the students
+  for (var j = 1; j < studentObjects.length; ++j) {
+    var rowDataStu = studentObjects[j];
+    var nn = rowDataStu.studentName.indexOf(nameBox);
+    //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
+    if (nn === -1) {
+      continue;
+    }
+   //retrieving student levels
+    var lsLevelStu = rowDataStu.lsLevel;
+    var rwLevelStu = rowDataStu.rwLevel;   
+    //converts levels into numbers
+     lsLevelStu = numberLevel(lsLevelStu);
+     rwLevelStu = numberLevel(rwLevelStu);
+    
+
   for (var i = 1; i < clusterObjects.length; ++i) {
+  
+ 
+  
+  
+  
+  
     var rowData = clusterObjects[i];
-    var clusterName = rowData.clusterName + " " + rowData.time;
-    clusterList[i] = clusterName;
+    var lsClusterLevel = rowData.lsLevel;
+    var rwClusterLevel = rowData.rwLevel;  
+    //check cluster availibility  
+    var clusterSize = rowData.size;
+    if(rowData.size < rowData.maxSize && (rwLevelStu >= rwClusterLevel) && (lsLevelStu >= lsClusterLevel)){
+        var clusterName = rowData.clusterName + " " + rowData.time;
+       clusterList[i] = clusterName;
+    }
+  }//closes student loop
+ 
   }
-  clusterList.shift();
+  
+  clusterList = clusterList.filter(function(x){
+  return (x !== (undefined || ''));
+});
+
+//  clusterList.shift();
+ 
+  
   return clusterList;
 }
 
@@ -62,8 +111,7 @@ function getStudentEmail(form) {
 }
 
 //checks the level of student and sees whether the students are eligible for the cluster they want to take
-function checkLevel(form){
-  var clusterBox = form.clusterName;
+function checkLevel(form, clusterBox){
   clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
   var nameBox = form.studentName.toString();
   var levelVer = false;
