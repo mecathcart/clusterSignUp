@@ -54,11 +54,6 @@ function getClusterList(form) {
 
   for (var i = 1; i < clusterObjects.length; ++i) {
   
- 
-  
-  
-  
-  
     var rowData = clusterObjects[i];
     var lsClusterLevel = rowData.lsLevel;
     var rwClusterLevel = rowData.rwLevel;  
@@ -110,56 +105,12 @@ function getStudentEmail(form) {
   return studentEmail;
 }
 
-//checks the level of student and sees whether the students are eligible for the cluster they want to take
-function checkLevel(form, clusterBox){
-  clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
-  var nameBox = form.studentName.toString();
-  var levelVer = false;
-  //loops through the students
-  for (var i = 1; i < studentObjects.length; ++i) {
-    var rowData = studentObjects[i];
-    var nn = rowData.studentName.indexOf(nameBox);
-    //if nameBox and studentName are the same than n will equal 1, if not it will equal -1
-    if (nn === -1) {
-      continue;
-    }
-   //retrieving student levels
-    var lsLevel = rowData.lsLevel;
-    var rwLevel = rowData.rwLevel;   
-    //converts levels into numbers
-     lsLevel = numberLevel(lsLevel);
-     rwLevel = numberLevel(rwLevel);
-  //   Logger.log(lsLevel);
-  
-  }//closes student loop
-  
-  
-    //loops through clusters
-    for (var i = 1; i < clusterObjects.length; ++i) {
-      var rowDataCluster = clusterObjects[i];
-      var clusterNN = rowDataCluster.clusterName.indexOf(clusterBox);
-       if (clusterNN === -1) {
-        continue;
-      }    
-     //determines cluster level
-      var lsClusterLevel = rowDataCluster.lsLevel;
-      var rwClusterLevel = rowDataCluster.rwLevel;      
-      //verifies whether student is a high enough level  
-      if(lsLevel >= lsClusterLevel && rwLevel >= rwClusterLevel) {
-      levelVer = true;
-      }else{
-      levelVer = false;
-      }//closes if clause
-    }//closes cluster loop
-  return levelVer;
-}
 
 
-//checks whether cluster is full or not and adds student to roster if the class is availible
-function checkAvailibility(form){
+// adds student to roster 
+function clusterSignUp(form){
 var clusterBox = form.clusterName;
-//clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
-var clusterAvailible = false;  
+clusterBox = clusterBox.slice(0,clusterBox.indexOf(" "));
   //loops through clusters
   for (var i = 1; i < clusterObjects.length; ++i) {
     var rowData = clusterObjects[i];
@@ -169,7 +120,7 @@ var clusterAvailible = false;
       continue;
     }
     var clusterSize = rowData.size;
-    if(clusterSize < rowData.maxSize){
+   
       clusterSize++;   
     //  var columnSize = rowData.indexOf(size);
     //  Logger.log(columnSize);
@@ -185,12 +136,7 @@ var clusterAvailible = false;
       roster = roster.toString();
       var rosterCell = clusterSheet.getRange(i+1,9);
       rosterCell.setValue(roster);      
-      clusterAvailible = true;
-    }else{
-      clusterAvailible = false;
-    }  
   }//closes for loop
-return clusterAvailible;
 }
 
 
