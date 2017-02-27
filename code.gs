@@ -23,14 +23,6 @@ var studentSheetRange = studentSheet.getRange(1, 1, studentSheet.getMaxRows(), s
 var studentObjects = getRowsData(studentSheet, studentSheetRange);
 
 
-function getLevels(form){
-    var nameBox = form.studentName.toString();
-    Logger.log("I am student name" +nameBox);
-}
-
-
-// getLevels();
- 
 //retrieves the list of clusters
 function getClusterList(form) {
   var nameBox = form.studentName.toString();
@@ -59,19 +51,22 @@ function getClusterList(form) {
     var rwClusterLevel = rowData.rwLevel;  
     //check cluster availibility  
     var clusterSize = rowData.size;
+    var clusterName = rowData.clusterName + " " + rowData.time;
+
     if(rowData.size < rowData.maxSize && (rwLevelStu >= rwClusterLevel) && (lsLevelStu >= lsClusterLevel)){
-        var clusterName = rowData.clusterName + " " + rowData.time;
+       clusterList[i] = clusterName;
+    }else{
+       clusterName = clusterName + "gray"; 
        clusterList[i] = clusterName;
     }
-  }//closes student loop
- 
-  }
+  }//closes cluster loop
+ }//closes student loop
   
-  clusterList = clusterList.filter(function(x){
-  return (x !== (undefined || ''));
-});
+//  clusterList = clusterList.filter(function(x){
+//  return (x !== (undefined || ''));
+//});
 
-//  clusterList.shift();
+  clusterList.shift();
  
   
   return clusterList;

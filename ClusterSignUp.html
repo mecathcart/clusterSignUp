@@ -32,8 +32,12 @@
     
     
   <div id = "clusterSignUp" hidden= "hidden">
+          Clusters that appear grayed out are either full or you do not meet the level requirements for the cluster. <br> <br>
+
       <select id="selectCluster" name ="clusterName" >
-        <option value="" disabled selected>Please select a cluster</option> 
+        <option value="" disabled selected>
+      
+        Please select a cluster</option> 
       </select>
       <input type="submit" onClick="formSubmitCluster(event)" value = "Submit"/> <p>
   </div>
@@ -149,9 +153,24 @@ function formSubmitEmail(event) {
      var dropdown = document.getElementById("selectCluster");
     // Loop through the array
     for (var i = 0; i < clusterList.length; ++i) {
+  
+    
      //Append the element to the end of Array list
-     dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);
-     }     
+     dropdown[dropdown.length] = new Option(clusterList[i], clusterList[i]);   
+   
+     
+     }
+     for (var i = 0; i < dropdown.length; ++i) {
+         if(dropdown[i].value.includes("gray") == true){
+            dropdown[i].value = dropdown[i].value.replace("gray", "");
+           dropdown[i].setAttribute("disabled", "disabled")
+         //console.log(dropdown[i]);
+         }
+     
+     
+     }
+
+
    }   
         
       
